@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+.row {
+	margin-bottom: 10px;	
+}
+
+#top .card {
+	min-height: 220px
+}
+
+#previous-number, #current-number {
+	font-size:4em;
+}
+
+#previous-number {
+	color: #eee;
+}
+
+.number-card {
+	border: 1px solid #eee;
+	text-align: center;
+	min-height: 2em;
+	padding: 0;
+}
+
+.called {
+	background-color: #eee;
+}
