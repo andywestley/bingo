@@ -1,5 +1,5 @@
 /**
- * 
+ * functions for bing machine
  */
 function addLoadEvent(func) {
 	var oldonload = window.onload;
