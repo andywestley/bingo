@@ -16,14 +16,26 @@
 
 <link rel="stylesheet" href="bingo.css">
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-22454634-4"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<meta property="og:title" content="Andy's Bingo Machine">
+<meta property="og:description"
+	content="A simple bingo machine you can use to play draw number for a game of bingo.">
+<meta property="og:site_name" content="Andy's Bingo Machine">
+<meta property="og:url" content="https://bingo.andrewwestley.co.uk">
+<meta property="og:description" content="">
+<meta property="og:type" content="website">
+<meta property="og:image" content="">
 
-  gtag('config', 'UA-22454634-4');
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async
+	src="https://www.googletagmanager.com/gtag/js?id=UA-22454634-4"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag() {
+		dataLayer.push(arguments);
+	}
+	gtag('js', new Date());
+
+	gtag('config', 'UA-22454634-4');
 </script>
 
 </head>
@@ -39,7 +51,10 @@
 				<div class="card h-100">
 					<div class="card-header">Current number</div>
 					<div class="card-body">
-						<button type="button" class="btn btn-primary" id="pick-ball">Pick next number</button>
+						<button type="button" class="btn btn-primary" id="pick-ball">Pick
+							next number</button>
+						<button type="button" class="btn btn-secondary" id="new-game">Start
+							new game</button>
 					</div>
 				</div>
 
