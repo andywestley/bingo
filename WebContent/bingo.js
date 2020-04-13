@@ -41,12 +41,20 @@ function init() {
 	var pickBallButton = document.getElementById("pick-ball");
 	pickBallButton.onclick = nextBall;
 
-	demo();
+	var newGameButton = document.getElementById("new-game");
+	newGameButton.onclick = newGame;
+	
+	
+	//demo();
 
 }
 
 function demo() {
 	ballsInMachine.forEach(logBalls);
+}
+
+function newGame() {
+	location.reload();
 }
 
 function nextBall() {
