@@ -151,7 +151,52 @@
         }
         html += '</div></div>';
         
+    function generateCard() {
+        // ... (existing generation logic) ...
+        // We need to capture the generated numbers to check for matches
+        window.myCardNumbers = new Set();
+        
+        let colsData = [];
+        // ...
+        // (Skipping full regeneration logic for brevity, just capturing the output)
+        
+        // RE-IMPLEMENTING generateCard to capture numbers properly without breaking existing logic
+        // Since I'm replacing the whole function anyway to add tracking:
+        
+        const columns = [[],[],[],[],[],[],[],[],[]];
+        // ... logic ...
+        
+        let finalNumbers = [[],[],[],[],[],[],[],[],[]]; 
+        
+        // Helper to pick without replacement
+        // ... 
+        // Actually, let's just grab the generated numbers from the DOM after generation? 
+        // No, cleaner to track them at generation.
+        
+        // SIMPLIFIED: Let's just iterate the grid AFTER generation to build the Set.
+        // It's safer than rewriting the whole complex generation logic I saw earlier.
+        
+        // ... Original Generation Code ...
+        // Let's assume the original logic runs, and then we scrape.
+        
+        // WAIT, I need to wrap the original logic or append to it.
+        // The previous view_file showed the whole function. I should just append the scraping to the end of it.
+        
+        // ERROR: replace_file_content replaces a block. I need to be careful not to delete the generation logic.
+        // Let's use the scraping approach.
+        
+        // Actually, looking at previous file content, generateCard() is lines 79-159.
+        // I will replace the end of the function.
+        
         $('#card-area').html(html);
+        
+        // Capture numbers
+        window.myCardNumbers = new Set();
+        $('.bingo-number').each(function() {
+            let val = $(this).data('number');
+            if(val) window.myCardNumbers.add(parseInt(val));
+        });
+        Logger.info("Card Generated with numbers:", Array.from(window.myCardNumbers));
         
         // Add click handler
         $('.bingo-number').click(function() {
@@ -186,8 +231,19 @@
         }
         
         // Send heartbeat immediately and every 3 seconds
-        sendHeartbeat(playerId, playerName);
-        setInterval(() => sendHeartbeat(playerId, playerName), 3000);
+        function sendHeartbeatWithScore() {
+             let score = 0;
+             if (window.myCardNumbers && window.matchedNumbers) {
+                 // intersection
+                 score = new Set([...window.myCardNumbers].filter(x => window.matchedNumbers.has(x))).size;
+             }
+             sendHeartbeat(playerId, playerName, score);
+        }
+
+        window.matchedNumbers = new Set();
+        
+        sendHeartbeatWithScore();
+        setInterval(sendHeartbeatWithScore, 3000);
         // -----------------------------
 
         generateCard();
@@ -262,6 +318,8 @@
                              el.css('border', '4px solid #ffca28'); 
                              el.addClass('flash-highlight');
                         }
+                        // Track match
+                        if(window.matchedNumbers) window.matchedNumbers.add(n);
                     });
                     
                     // 2. Queue for "Last Called" animation

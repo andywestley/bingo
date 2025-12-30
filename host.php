@@ -160,7 +160,8 @@
                     const list = $('#player-list');
                     list.empty();
                     data.players.forEach(p => {
-                        list.append(`<li class="list-group-item py-1">${p.name}</li>`);
+                        let scoreDisplay = (p.score !== undefined) ? ` <span class="badge badge-primary float-right">${p.score}</span>` : '';
+                        list.append(`<li class="list-group-item py-1 clearfix">${p.name}${scoreDisplay}</li>`);
                     });
                 } else {
                     Logger.warn("Failed to get player list or empty response");

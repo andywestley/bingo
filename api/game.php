@@ -95,15 +95,27 @@ switch ($action) {
          initDb($db);
          $id = $_POST['id'] ?? '';
          $name = $_POST['name'] ?? 'Unknown';
+         $score = $_POST['score'] ?? 0;
          if(!$id) {
              echo json_encode(['error' => 'Missing ID']);
              exit;
          }
          
+         // Ensure schema has score column (poor man's migration for SQLite)
+         // We'll just ignore error if it exists or create table with it from scratch if not.
+         // Better: just add it to the CREATE statement and alter if needed? 
+         // For simplicity in this dev loop, let's assume table might need alter or just recreate.
+         // Actually, let's just try to add the column if missing? No, SQLite ALTER is limited.
+         // Simplest for this env: Just update the CREATE IF NOT EXISTS in initDb and hope user creates fresh on deploy, 
+         // OR, just try to run ALTER TABLE and catch exception.
+         try {
+            $db->exec("ALTER TABLE players ADD COLUMN score INTEGER DEFAULT 0");
+         } catch(Exception $e) { /* Ignore if exists */ }
+
          // Upsert player
-         $stmt = $db->prepare("INSERT INTO players (id, name, last_seen) VALUES (:id, :name, CURRENT_TIMESTAMP) 
-                               ON CONFLICT(id) DO UPDATE SET name = :name, last_seen = CURRENT_TIMESTAMP");
-         $stmt->execute([':id' => $id, ':name' => $name]);
+         $stmt = $db->prepare("INSERT INTO players (id, name, score, last_seen) VALUES (:id, :name, :score, CURRENT_TIMESTAMP) 
+                               ON CONFLICT(id) DO UPDATE SET name = :name, score = :score, last_seen = CURRENT_TIMESTAMP");
+         $stmt->execute([':id' => $id, ':name' => $name, ':score' => $score]);
          echo json_encode(['status' => 'success']);
          break;
 
