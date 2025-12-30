@@ -25,6 +25,11 @@
 					<div class="card-body">
 						<button type="button" class="btn btn-primary btn-block mb-3" id="pick-ball">Pick next number</button>
 						<button type="button" class="btn btn-danger btn-block" id="new-game">Start new game</button>
+                        <hr>
+                        <h5>Connected Players: <span id="player-count">0</span></h5>
+                        <ul id="player-list" class="list-group list-group-flush" style="max-height: 200px; overflow-y: auto;">
+                            <!-- Players go here -->
+                        </ul>
 					</div>
 				</div>
 
@@ -141,6 +146,19 @@
                     $('#previous-number').text(previous);
                 }
             }
+
+            // Player Polling
+            setInterval(async function() {
+                const data = await getConnectedPlayers();
+                if(data && data.players) {
+                    $('#player-count').text(data.players.length);
+                    const list = $('#player-list');
+                    list.empty();
+                    data.players.forEach(p => {
+                        list.append(`<li class="list-group-item py-1">${p.name}</li>`);
+                    });
+                }
+            }, 4000);
 
             refreshBoard();
         });

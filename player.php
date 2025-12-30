@@ -159,6 +159,29 @@
     }
 
     $(document).ready(function() {
+        
+        // --- Player Identification ---
+        let playerId = localStorage.getItem('bingo_player_id');
+        if (!playerId) {
+            playerId = 'player_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('bingo_player_id', playerId);
+        }
+
+        let playerName = localStorage.getItem('bingo_player_name');
+        if (!playerName || playerName === 'null') {
+            playerName = prompt("Please enter your name for the Bingo Host:", "Guest");
+            if(playerName) {
+                localStorage.setItem('bingo_player_name', playerName);
+            } else {
+                playerName = "Guest";
+            }
+        }
+        
+        // Send heartbeat immediately and every 3 seconds
+        sendHeartbeat(playerId, playerName);
+        setInterval(() => sendHeartbeat(playerId, playerName), 3000);
+        // -----------------------------
+
         generateCard();
 
         $('#bingo-shout').click(function() {

@@ -23,6 +23,24 @@ async function getStatus() {
     return await apiCall('get_status');
 }
 
+async function sendHeartbeat(id, name) {
+    try {
+        const formData = new FormData();
+        formData.append('action', 'register_heartbeat');
+        formData.append('id', id);
+        formData.append('name', name);
+        const response = await fetch(API_URL, { method: 'POST', body: formData });
+        return await response.json();
+    } catch (e) {
+        console.error("API Error:", e);
+        return { error: e.message };
+    }
+}
+
+async function getConnectedPlayers() {
+    return await apiCall('get_players');
+}
+
 function getNumberSlang(number) {
     // Copied from original bingo.js
     var slang = "";
