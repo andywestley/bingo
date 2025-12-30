@@ -80,20 +80,6 @@
     function generateCard() {
         // 9 columns
         // Col 0: 1-9, Col 1: 10-19 ... Col 8: 80-90
-        const columns = [[],[],[],[],[],[],[],[],[]];
-        const rows = [[],[],[]]; // 3 rows
-        
-        // We need 15 numbers total.
-        // Rule: Each row has 5 numbers.
-        // Rule: Each column has at least 1 number (optional strictly, but good practice).
-        
-        // Simplified Logic: 
-        // 1. Pick 15 unique numbers from 1-90 distribution.
-        // Actually, to display them in a grid, we need to know which column they belong to.
-        
-        // Let's force proper column distribution:
-        // Pick one number for every column (9 numbers).
-        // Pick 6 more numbers from random columns (ensuring no column has > 3).
         
         let colsData = [];
         for(let c=0; c<9; c++) {
@@ -126,18 +112,7 @@
         // Sort columns
         for(let c=0; c<9; c++) finalNumbers[c].sort((a,b)=>a-b);
         
-        // Populate rows (This is the tricky part - mapping variable col lengths to fixed row lengths of 5)
-        // Simplified: Just render the 9 columns and blank cells where needed.
-        // But for this MVP, let's just render the grid with what we have. 
-        // A proper UK card layout algorithm is complex (swapping to fit 5 per row).
-        
-        // ALTERNATIVE: Just render the 3x9 grid, filling slots from top to bottom in each column. 
-        // Empties are empties. Note: This might not strictly guarantee 5 per row, but it's close enough for a basic game.
-        
         let html = '<div class="player-card">';
-        // We will try to balance them into 3 rows.
-        // Simple approach: Render a table where each column shows its numbers.
-        
         html += '<div class="row">';
         for(let c=0; c<9; c++) {
             html += `<div class="col text-center border-right">`;
@@ -151,46 +126,9 @@
         }
         html += '</div></div>';
         
-    function generateCard() {
-        // ... (existing generation logic) ...
-        // We need to capture the generated numbers to check for matches
-        window.myCardNumbers = new Set();
-        
-        let colsData = [];
-        // ...
-        // (Skipping full regeneration logic for brevity, just capturing the output)
-        
-        // RE-IMPLEMENTING generateCard to capture numbers properly without breaking existing logic
-        // Since I'm replacing the whole function anyway to add tracking:
-        
-        const columns = [[],[],[],[],[],[],[],[],[]];
-        // ... logic ...
-        
-        let finalNumbers = [[],[],[],[],[],[],[],[],[]]; 
-        
-        // Helper to pick without replacement
-        // ... 
-        // Actually, let's just grab the generated numbers from the DOM after generation? 
-        // No, cleaner to track them at generation.
-        
-        // SIMPLIFIED: Let's just iterate the grid AFTER generation to build the Set.
-        // It's safer than rewriting the whole complex generation logic I saw earlier.
-        
-        // ... Original Generation Code ...
-        // Let's assume the original logic runs, and then we scrape.
-        
-        // WAIT, I need to wrap the original logic or append to it.
-        // The previous view_file showed the whole function. I should just append the scraping to the end of it.
-        
-        // ERROR: replace_file_content replaces a block. I need to be careful not to delete the generation logic.
-        // Let's use the scraping approach.
-        
-        // Actually, looking at previous file content, generateCard() is lines 79-159.
-        // I will replace the end of the function.
-        
         $('#card-area').html(html);
         
-        // Capture numbers
+        // Capture numbers for telemetry
         window.myCardNumbers = new Set();
         $('.bingo-number').each(function() {
             let val = $(this).data('number');
@@ -230,35 +168,33 @@
              Logger.info("Loaded Player Name: " + playerName);
         }
         
-        // Send heartbeat immediately and every 3 seconds
+        // Telemetry & Heartbeat
+        window.matchedNumbers = new Set();
         function sendHeartbeatWithScore() {
              let score = 0;
              if (window.myCardNumbers && window.matchedNumbers) {
-                 // intersection
                  score = new Set([...window.myCardNumbers].filter(x => window.matchedNumbers.has(x))).size;
              }
              sendHeartbeat(playerId, playerName, score);
         }
-
-        window.matchedNumbers = new Set();
         
         sendHeartbeatWithScore();
         setInterval(sendHeartbeatWithScore, 3000);
-        // -----------------------------
 
+        // Generate Card
         generateCard();
 
         $('#bingo-shout').click(function() {
              alert("BINGO! (Check with host)");
         });
 
-        // Polling
+        // Polling Variables
         let lastKnownCount = 0;
         let updateQueue = [];
         let isDisplaying = false;
         let initialSync = false;
 
-        // Process Queue Loop (Animation Only)
+        // Process Queue Loop (Animation)
         setInterval(function() {
             if (!isDisplaying && updateQueue.length > 0) {
                 isDisplaying = true;
@@ -267,12 +203,11 @@
                 // Update "Last Called" Display
                 $('#last-called').text(num);
                 $('#last-called').addClass('flash-highlight');
-                setTimeout(() => $('#last-called').removeClass('flash-highlight'), 500); // Faster reset
+                setTimeout(() => $('#last-called').removeClass('flash-highlight'), 500);
 
-                // Animation Logging
-                Logger.info(`Animating Number: ${num} (Queue: ${updateQueue.length})`);
+                Logger.info(`Animating Number: ${num}`);
 
-                // Dynamic Delay: Faster if queue is long
+                // Dynamic Delay
                 let delay = 800; 
                 if (updateQueue.length > 2) delay = 400;
                 if (updateQueue.length > 5) delay = 200;
@@ -283,12 +218,13 @@
             }
         }, 50);
 
+        // Status Polling Loop
         setInterval(async function() {
             const status = await getStatus();
             if(status && status.drawn_numbers) {
                 const drawn = status.drawn_numbers;
                 
-                // Initial Sync: Just catch up instantly
+                // Initial Sync
                 if (!initialSync) {
                     initialSync = true;
                     lastKnownCount = drawn.length;
@@ -297,9 +233,9 @@
                          $('#last-called').text(status.current_number);
                     }
                     
-                    // Mark all on board
                     drawn.forEach(num => {
                         $(`#num-${num}`).css('border', '4px solid #ffca28').addClass('called');
+                         if(window.matchedNumbers) window.matchedNumbers.add(num);
                     });
                     
                     Logger.info("Initial Sync Complete");
@@ -308,21 +244,19 @@
 
                 // Normal Update
                 if (drawn.length > lastKnownCount) {
-                    // Identify new numbers
                     const newNumbers = drawn.slice(lastKnownCount);
                     
-                    // 1. IMMEDIATE BOARD UPDATE (Critical for fairness)
+                    // 1. Immediate Board Update
                     newNumbers.forEach(n => {
                         const el = $(`#num-${n}`);
                         if(el.length) {
                              el.css('border', '4px solid #ffca28'); 
                              el.addClass('flash-highlight');
                         }
-                        // Track match
                         if(window.matchedNumbers) window.matchedNumbers.add(n);
                     });
                     
-                    // 2. Queue for "Last Called" animation
+                    // 2. Queue for Animation
                     newNumbers.forEach(n => updateQueue.push(n));
                     
                     lastKnownCount = drawn.length;
