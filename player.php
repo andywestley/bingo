@@ -73,8 +73,8 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
-<script src="js/bingo-client.js"></script>
-<script src="js/logger.js"></script>
+<script src="js/logger.js?v=<?php echo time(); ?>"></script>
+<script src="js/bingo-client.js?v=<?php echo time(); ?>"></script>
 <script>
     // Simple 90-ball card generator logic
     function generateCard() {
