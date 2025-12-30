@@ -78,8 +78,11 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
 	<script src="js/bingo-client.js"></script>
+    <script src="js/logger.js"></script>
     <script>
         $(document).ready(function() {
+            Logger.info("Host View Initialized");
+
             // New Game
             $('#new-game').click(async function() {
                 if(confirm("Are you sure you want to start a new game? This will reset everyone's board.")) {
@@ -149,14 +152,18 @@
 
             // Player Polling
             setInterval(async function() {
+                Logger.debug("Polling for players...");
                 const data = await getConnectedPlayers();
                 if(data && data.players) {
+                    Logger.debug(`Received ${data.players.length} players`);
                     $('#player-count').text(data.players.length);
                     const list = $('#player-list');
                     list.empty();
                     data.players.forEach(p => {
                         list.append(`<li class="list-group-item py-1">${p.name}</li>`);
                     });
+                } else {
+                    Logger.warn("Failed to get player list or empty response");
                 }
             }, 4000);
 

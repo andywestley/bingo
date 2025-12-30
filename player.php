@@ -74,6 +74,7 @@
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
 <script src="js/bingo-client.js"></script>
+<script src="js/logger.js"></script>
 <script>
     // Simple 90-ball card generator logic
     function generateCard() {
@@ -159,12 +160,16 @@
     }
 
     $(document).ready(function() {
+        Logger.info("Player View Initialized");
         
         // --- Player Identification ---
         let playerId = localStorage.getItem('bingo_player_id');
         if (!playerId) {
             playerId = 'player_' + Math.random().toString(36).substr(2, 9);
             localStorage.setItem('bingo_player_id', playerId);
+            Logger.info("Generated new Player ID: " + playerId);
+        } else {
+            Logger.info("Loaded Player ID: " + playerId);
         }
 
         let playerName = localStorage.getItem('bingo_player_name');
@@ -175,6 +180,9 @@
             } else {
                 playerName = "Guest";
             }
+            Logger.info("Set Player Name: " + playerName);
+        } else {
+             Logger.info("Loaded Player Name: " + playerName);
         }
         
         // Send heartbeat immediately and every 3 seconds

@@ -2,11 +2,27 @@
 const API_URL = 'api/game.php';
 
 async function apiCall(action) {
+    // Only log write actions or if debug is really needed, otherwise polling spams console.
+    // Let's log everything for now as per request.
+    const isPolling = (action === 'get_status' || action === 'get_players');
+
+    // if(!isPolling) 
+    Logger.debug(`API Request: ${action}`);
+
     try {
         const response = await fetch(`${API_URL}?action=${action}`, { method: 'POST' });
-        return await response.json();
+        const data = await response.json();
+
+        // if(!isPolling) 
+        Logger.debug(`API Response [${action}]:`, data);
+
+        if (data.error) {
+            Logger.error(`API Error [${action}]:`, data.error);
+        }
+
+        return data;
     } catch (e) {
-        console.error("API Error:", e);
+        Logger.error(`API Network Error [${action}]:`, e);
         return { error: e.message };
     }
 }
@@ -24,15 +40,21 @@ async function getStatus() {
 }
 
 async function sendHeartbeat(id, name) {
+    Logger.debug(`Sending Heartbeat: ${name} (${id})`);
     try {
         const formData = new FormData();
         formData.append('action', 'register_heartbeat');
         formData.append('id', id);
         formData.append('name', name);
         const response = await fetch(API_URL, { method: 'POST', body: formData });
-        return await response.json();
+        const data = await response.json();
+
+        if (data.error) Logger.error("Heartbeat Error:", data.error);
+        else Logger.debug("Heartbeat OK");
+
+        return data;
     } catch (e) {
-        console.error("API Error:", e);
+        Logger.error("Heartbeat Network Error:", e);
         return { error: e.message };
     }
 }
