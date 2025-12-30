@@ -197,24 +197,79 @@
         });
 
         // Polling
+        let lastKnownCount = 0;
+        let updateQueue = [];
+        let isDisplaying = false;
+        let initialSync = false;
+
+        // Process Queue Loop (Animation Only)
+        setInterval(function() {
+            if (!isDisplaying && updateQueue.length > 0) {
+                isDisplaying = true;
+                const num = updateQueue.shift();
+                
+                // Update "Last Called" Display
+                $('#last-called').text(num);
+                $('#last-called').addClass('flash-highlight');
+                setTimeout(() => $('#last-called').removeClass('flash-highlight'), 500); // Faster reset
+
+                // Animation Logging
+                Logger.info(`Animating Number: ${num} (Queue: ${updateQueue.length})`);
+
+                // Dynamic Delay: Faster if queue is long
+                let delay = 800; 
+                if (updateQueue.length > 2) delay = 400;
+                if (updateQueue.length > 5) delay = 200;
+
+                setTimeout(() => {
+                    isDisplaying = false;
+                }, delay);
+            }
+        }, 50);
+
         setInterval(async function() {
             const status = await getStatus();
             if(status && status.drawn_numbers) {
-                // Update Last Called
-                if(status.current_number) {
-                     $('#last-called').text(status.current_number);
-                }
+                const drawn = status.drawn_numbers;
                 
-                // Auto-daub check or just highlight called numbers visually slightly different?
-                // "Auto-daubing" is easiest for verified play. 
-                // Let's highlight valid numbers in Yellow, user marks in Green.
-                
-                status.drawn_numbers.forEach(num => {
-                    const el = $(`#num-${num}`);
-                    if(el.length) {
-                        el.css('border', '3px solid #ffc107'); // Gold border for called numbers
+                // Initial Sync: Just catch up instantly
+                if (!initialSync) {
+                    initialSync = true;
+                    lastKnownCount = drawn.length;
+                    
+                    if (status.current_number) {
+                         $('#last-called').text(status.current_number);
                     }
-                });
+                    
+                    // Mark all on board
+                    drawn.forEach(num => {
+                        $(`#num-${num}`).css('border', '4px solid #ffca28').addClass('called');
+                    });
+                    
+                    Logger.info("Initial Sync Complete");
+                    return;
+                }
+
+                // Normal Update
+                if (drawn.length > lastKnownCount) {
+                    // Identify new numbers
+                    const newNumbers = drawn.slice(lastKnownCount);
+                    
+                    // 1. IMMEDIATE BOARD UPDATE (Critical for fairness)
+                    newNumbers.forEach(n => {
+                        const el = $(`#num-${n}`);
+                        if(el.length) {
+                             el.css('border', '4px solid #ffca28'); 
+                             el.addClass('flash-highlight');
+                        }
+                    });
+                    
+                    // 2. Queue for "Last Called" animation
+                    newNumbers.forEach(n => updateQueue.push(n));
+                    
+                    lastKnownCount = drawn.length;
+                    Logger.debug(`Process Update: ${newNumbers.length} new numbers.`);
+                }
             }
         }, 2000);
     });

@@ -25,3 +25,7 @@ The project code is located in the `WebContent` directory.
 2. Click **Pick next number** to draw a ball.
 3. The board will update to show called numbers.
 4. Click **Start new game** to reset.
+
+## Deployment
+
+See [DEPLOYING.md](DEPLOYING.md) for installation and configuration instructions, specifically regarding directory permissions for the database.

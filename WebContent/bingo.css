@@ -26,3 +26,12 @@
 .called {
 	background-color: #eee;
 }
+
+@keyframes flash-gold {
+    0% { background-color: #ffeb3b; transform: scale(1.2); }
+    100% { background-color: transparent; transform: scale(1.0); }
+}
+
+.flash-highlight {
+    animation: flash-gold 1s ease-out;
+}
