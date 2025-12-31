@@ -23,7 +23,7 @@ class BingoUI {
 
             // 1. Prepare target slot in history
             // Create the badge but make it invisible (opacity 0) to reserve space and calculate position
-            let historyHtml = `<span class="badge badge-light border p-2 m-1 history-item" style="font-size: 1.2rem; opacity: 0;">${currentDisplay}</span>`;
+            let historyHtml = `<span class="bingo-ball-history" style="opacity: 0;">${currentDisplay}</span>`;
             historyContainer.prepend(historyHtml);
 
             // Limit history length immediately to keep layout stable during calculation

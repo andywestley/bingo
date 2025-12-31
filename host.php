@@ -41,7 +41,7 @@
                             <div class="card-header text-center">Previous</div>
                             <div class="card-body p-2 d-flex align-items-center justify-content-center">
                                 <div id="host-recent-calls" class="d-flex flex-wrap justify-content-start align-content-start" style="gap: 5px; width: 100%; min-height: 50px;">
-                                    <span class="badge badge-light border p-2 m-1">--</span>
+                                    <span class="text-muted p-2">--</span>
                                 </div>
                             </div>
                         </div>
@@ -230,14 +230,14 @@
                      let historyItems = drawnHistory.filter(n => n != current).slice(-5).reverse();
                      
                      if (historyItems.length === 0 && !current) {
-                         histContainer.append('<span class="badge badge-light border p-2 m-1">--</span>');
+                         histContainer.append('<span class="text-muted p-2">--</span>');
                      } else {
                          historyItems.forEach(h => {
-                             histContainer.append(`<span class="badge badge-light border p-2 m-1 history-item" style="font-size: 1.2rem;">${h}</span>`);
+                             histContainer.append(`<span class="bingo-ball-history">${h}</span>`);
                          });
                      }
                 } else {
-                     histContainer.append('<span class="badge badge-light border p-2 m-1">--</span>');
+                     histContainer.append('<span class="text-muted p-2">--</span>');
                 }
             }
 

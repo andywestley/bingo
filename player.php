@@ -50,7 +50,7 @@
                 <div class="card-body p-2 d-flex align-items-center justify-content-center">
                     <div id="recent-calls" class="d-flex flex-wrap justify-content-start align-content-start" style="gap: 5px; width: 100%; min-height: 50px;">
                         <!-- History items will appear here -->
-                        <span class="badge badge-light border p-2">--</span>
+                        <span class="text-muted p-2">--</span>
                     </div>
                 </div>
             </div>

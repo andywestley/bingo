@@ -202,7 +202,7 @@ $(document).ready(function () {
                     // Get last 5 numbers EXCLUDING current
                     let history = drawn.filter(n => n != status.current_number).slice(-5).reverse();
                     history.forEach(h => {
-                        $('#recent-calls').append(`<span class="badge badge-secondary mx-1 p-2" style="font-size: 1.2rem;">${h}</span>`);
+                        $('#recent-calls').append(`<span class="bingo-ball-history">${h}</span>`);
                     });
                 }
 
