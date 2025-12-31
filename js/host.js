@@ -176,5 +176,9 @@ $(document).ready(function () {
         }
     }, 4000);
 
+    // Game State Polling (Numbers & Winner)
+    setInterval(refreshBoard, 2000);
+
+    // Initial call
     refreshBoard();
 });
