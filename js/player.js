@@ -250,5 +250,32 @@ $(document).ready(function () {
                 Logger.debug(`Process Update: ${newNumbers.length} new numbers.`);
             }
         }
+        // Poll for connected players
+        setInterval(async function () {
+            // Only update if not hidden or if in lobby? 
+            // Actually good to see even during game
+            const data = await getConnectedPlayers();
+            if (data && data.players) {
+                $('#player-count').text(data.players.length);
+                const list = $('#player-list');
+                list.empty();
+                data.players.forEach(p => {
+                    let isMe = (p.name === playerName) ? 'font-weight-bold LIST-GROUP-ITEM-PRIMARY' : '';
+                    let badge = '';
+
+                    // Show winner badge if they won?
+                    // Or just simpler logic: Name + ToGo
+                    let matchedArr = p.matched_str ? p.matched_str.split(',').filter(n => n) : [];
+                    let toGo = 15 - matchedArr.length;
+                    if (toGo < 0) toGo = 0;
+
+                    let toGoBadge = `<span class="badge badge-secondary float-right">Need ${toGo}</span>`;
+                    if (toGo <= 1) toGoBadge = `<span class="badge badge-success float-right pulse">Need ${toGo}</span>`;
+
+                    list.append(`<li class="list-group-item py-1 ${isMe}">${p.name} ${toGoBadge}</li>`);
+                });
+            }
+        }, 5000); // Poll every 5s
+
     }, 2000);
 });
