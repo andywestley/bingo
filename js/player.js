@@ -165,7 +165,7 @@ $(document).ready(function () {
             // Run Animation
             await BingoUI.animateTransition(nextNum, currentEl, historyContainer);
         }
-    }, 2000); // Process every 2 seconds
+    }, 800); // Process every 800ms
 
     // Status Polling Loop
     setInterval(async function () {

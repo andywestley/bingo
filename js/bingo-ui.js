@@ -56,7 +56,7 @@ class BingoUI {
                 fontWeight: 'bold',
                 color: '#333',
                 zIndex: 1000,
-                transition: 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)' // Bouncy effect
+                transition: 'all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)' // Bouncy effect
             });
 
             // 4. Trigger Animation
@@ -82,7 +82,7 @@ class BingoUI {
                 flyer.remove();
                 targetBadge.css('opacity', 1); // Reveal real badge
                 resolve();
-            }, 550); // Slightly longer than transition to be safe
+            }, 450); // Slightly longer than transition to be safe
         });
     }
 }
