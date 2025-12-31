@@ -187,17 +187,22 @@
 
             // Pick Ball
             $('#pick-ball').click(async function() {
-                // Disable button during animation
-                $(this).prop('disabled', true);
-                
-                const result = await drawBall();
-                if(result.status === 'success') {
-                    await updateBoardAnim(result.current_number);
-                } else if(result.status === 'error') {
-                    alert(result.message);
+                try {
+                    // Disable button during animation
+                    $(this).prop('disabled', true);
+                    
+                    const result = await drawBall();
+                    if(result.status === 'success') {
+                        await updateBoardAnim(result.current_number);
+                    } else if(result.status === 'error') {
+                        alert(result.message);
+                    }
+                } catch (e) {
+                    console.error("Pick Ball Error:", e);
+                    alert("An error occurred while picking the next ball. Please try again.");
+                } finally {
+                     $(this).prop('disabled', false);
                 }
-                
-                $(this).prop('disabled', false);
             });
 
             async function updateBoardAnim(current) {
