@@ -48,9 +48,20 @@
                         <span id="player-count" class="badge badge-pill badge-info">0</span>
                     </div>
                     <div class="card-body p-0">
-                         <ul id="player-list" class="list-group list-group-flush" style="max-height: 200px; overflow-y: auto;">
-                            <!-- Players go here -->
-                        </ul>
+                        <div style="max-height: 200px; overflow-y: auto;">
+                            <table class="table table-sm table-striped mb-0" style="font-size: 0.9rem;">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="pl-3">Name</th>
+                                        <th class="text-center">Matches</th>
+                                        <th class="text-center">Marked</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="player-list-body">
+                                    <!-- Players go here -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -270,28 +281,30 @@
                 if(data && data.players) {
                     Logger.debug(`Received ${data.players.length} players`);
                     $('#player-count').text(data.players.length);
-                    const list = $('#player-list');
+                    $('#player-count').text(data.players.length);
+                    const list = $('#player-list-body');
                     list.empty();
                     data.players.forEach(p => {
-                        let score = p.score || 0;
-                        let matched = p.matched_str ? p.matched_str.split(',') : [];
-                        let marked = p.marked_str ? p.marked_str.split(',') : [];
+                        let score = p.score || 0; // This is essentially matches count calculated by server/client
+                        let matchedArr = p.matched_str ? p.matched_str.split(',') : [];
+                        let markedArr = p.marked_str ? p.marked_str.split(',') : [];
                         
-                        // Create visual indicators
-                        let info = `<div style="font-size: 0.8rem; color: #666;">
-                            Matches: <span class="text-success">${matched.join(', ') || '-'}</span><br>
-                            Marked: <span class="text-info">${marked.join(', ') || '-'}</span>
-                        </div>`;
+                        // Filter empty strings if any
+                        matchedArr = matchedArr.filter(n => n.length > 0);
+                        markedArr = markedArr.filter(n => n.length > 0);
+
+                        let matchCount = matchedArr.length;
+                        let markedCount = markedArr.length;
                         
-                        let badgeClass = (score >= 4) ? 'badge-danger' : (score > 0 ? 'badge-primary' : 'badge-secondary');
-                        
-                        list.append(`<li class="list-group-item player-list-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <strong>${p.name}</strong>
-                                <span class="badge ${badgeClass}">${score}</span>
-                            </div>
-                            ${info}
-                        </li>`);
+                        // Highlight if close to winning (e.g. > 4 matches? Standard bingo is 15 but let's just keep logic simple)
+                        let rowClass = (matchCount >= 4) ? 'font-weight-bold' : '';
+                        let badgeClass = (matchCount > 0) ? 'badge-primary' : 'badge-secondary';
+
+                        list.append(`<tr class="${rowClass}">
+                            <td class="pl-3 align-middle">${p.name}</td>
+                            <td class="text-center align-middle"><span class="badge ${badgeClass}" style="min-width: 25px;">${matchCount}</span></td>
+                            <td class="text-center align-middle"><span class="badge badge-light border" style="min-width: 25px;">${markedCount}</span></td>
+                        </tr>`);
                     });
                 } else {
                     Logger.warn("Failed to get player list or empty response");
