@@ -18,6 +18,16 @@ $(document).ready(function () {
         }
     });
 
+    // Start Game
+    $('#start-game').click(async function () {
+        const result = await apiCall('start_game');
+        if (result.status === 'success') {
+            refreshBoard(); // Update UI immediately
+        } else {
+            alert("Error: " + result.message);
+        }
+    });
+
     // Pick Ball
     $('#pick-ball').click(async function () {
         try {
@@ -99,6 +109,19 @@ $(document).ready(function () {
 
         if (status && status.drawn_numbers) {
             let current = status.current_number;
+
+            let statusName = status.status;
+
+            // Toggle Controls
+            if (statusName === 'LOBBY') {
+                $('#start-game').show();
+                $('#pick-ball').hide();
+                $('#current-number').text('--'); // Show placeholder
+                $('#slang').text('Waiting for players...');
+            } else {
+                $('#start-game').hide();
+                $('#pick-ball').show();
+            }
 
             // Initial update (no animation)
             updateDisplayInitial(current, status.drawn_numbers);

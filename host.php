@@ -83,7 +83,8 @@
                         <button class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#helpModal">?</button>
                     </div>
 					<div class="card-body">
-						<button type="button" class="btn btn-primary btn-block mb-3 btn-control shadow-sm" id="pick-ball">Next Ball</button>
+						<button id="start-game" class="btn btn-success btn-lg btn-block mb-3" style="display:none;">Start Game</button>
+						<button id="pick-ball" class="btn btn-primary btn-lg btn-block">Next Ball</button>
 						<button type="button" class="btn btn-outline-danger btn-block btn-control" id="new-game">Reset</button>
 					</div>
 				</div>

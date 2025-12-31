@@ -169,8 +169,17 @@ $(document).ready(function () {
     setInterval(async function () {
         const status = await getStatus();
 
+        if (status && status.status === 'LOBBY') {
+            $('#lobby-overlay').fadeIn();
+            $('#card-area').css('opacity', '0.2'); // Dim the board
+            // Don't process other updates if in lobby
+        } else {
+            $('#lobby-overlay').fadeOut();
+            $('#card-area').css('opacity', '1');
+        }
+
         // Winner Notification
-        if (status && status.winner_info) {
+        if (status && status.status !== 'LOBBY' && status.winner_info) {
             let info = status.winner_info;
             if (info.player !== playerName) { // Don't annoy the winner themselves
                 // Simple full screen overlay or just an alert? Let's do a sticky header

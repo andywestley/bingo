@@ -22,6 +22,15 @@
         <button class="btn btn-outline-info btn-sm position-absolute" style="right: 0;" data-toggle="modal" data-target="#playerHelpModal">?</button>
     </div>
 
+    <!-- Waiting Screen Overlay -->
+    <div id="lobby-overlay" class="text-center p-5 bg-white shadow rounded" style="display:none; position:absolute; top:80px; left:0; right:0; z-index:2000; margin: 0 15px;">
+        <h2 class="text-primary mb-3">Waiting for Host...</h2>
+        <p class="lead">The game hasn't started yet. Relax!</p>
+        <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
     <div id="card-area" class="mt-4">
         <!-- Card will be generated here -->
     </div>

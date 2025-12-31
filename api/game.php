@@ -36,7 +36,7 @@ function initDb($db) {
     // Ensure there is one row
     $count = $db->query("SELECT COUNT(*) FROM game_state")->fetchColumn();
     if ($count == 0) {
-        $db->exec("INSERT INTO game_state (id, current_number, drawn_numbers, status) VALUES (1, NULL, '[]', 'stopped')");
+        $db->exec("INSERT INTO game_state (id, current_number, drawn_numbers, status) VALUES (1, NULL, '[]', 'LOBBY')");
     }
     
     // Add winner_info column if missing
@@ -56,12 +56,20 @@ function initDb($db) {
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
 
 switch ($action) {
+    case 'reset_game':
+        initDb($db);
+        // Reset the game state to LOBBY
+        $stmt = $db->prepare("UPDATE game_state SET current_number = NULL, drawn_numbers = '[]', status = 'LOBBY', winner_info = NULL, started_at = CURRENT_TIMESTAMP WHERE id = 1");
+        $stmt->execute();
+        echo json_encode(['status' => 'success', 'message' => 'Game reset to Lobby']);
+        break;
+
     case 'start_game':
         initDb($db);
-        // Reset the game state
-        $stmt = $db->prepare("UPDATE game_state SET current_number = NULL, drawn_numbers = '[]', status = 'playing', winner_info = NULL, started_at = CURRENT_TIMESTAMP WHERE id = 1");
+        // Set status to PLAYING
+        $stmt = $db->prepare("UPDATE game_state SET status = 'PLAYING', started_at = CURRENT_TIMESTAMP WHERE id = 1");
         $stmt->execute();
-        echo json_encode(['status' => 'success', 'message' => 'New game started']);
+        echo json_encode(['status' => 'success', 'message' => 'Game Started']);
         break;
 
     case 'draw_ball':
