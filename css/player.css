@@ -24,18 +24,4 @@ body {
     }
 }
 
-@keyframes flash-gold {
-    0% {
-        background-color: #fff3cd;
-        transform: scale(1.1);
-    }
-
-    100% {
-        background-color: transparent;
-        transform: scale(1.0);
-    }
-}
-
-.flash-highlight {
-    animation: flash-gold 0.5s ease-out;
-}
+/* Animation is now in bingo-theme.css */

@@ -84,3 +84,20 @@ h6 {
     margin: 5px;
     border: 2px solid transparent;
 }
+
+/* Shared Animations */
+@keyframes flash-gold {
+    0% {
+        background-color: #ffeeba;
+        transform: scale(1.1);
+    }
+
+    100% {
+        background-color: transparent;
+        transform: scale(1.0);
+    }
+}
+
+.flash-highlight {
+    animation: flash-gold 0.5s ease-out;
+}

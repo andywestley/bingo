@@ -1,4 +1,9 @@
 
+/**
+ * Bingo API Client
+ * Wraps all AJAX calls to `api/game.php` for simpler consumption by Host and Player.
+ */
+
 const API_URL = 'api/game.php';
 
 async function apiCall(action) {
