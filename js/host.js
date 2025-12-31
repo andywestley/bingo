@@ -190,13 +190,21 @@ $(document).ready(function () {
 
                 let matchCount = matchedArr.length;
                 let markedCount = markedArr.length;
+                let toGo = 15 - matchCount;
+                if (toGo < 0) toGo = 0; // Just in case
 
                 // Highlight if close to winning (e.g. > 4 matches? Standard bingo is 15 but let's just keep logic simple)
                 let rowClass = (matchCount >= 4) ? 'font-weight-bold' : '';
                 let badgeClass = (matchCount > 0) ? 'badge-primary' : 'badge-secondary';
 
+                // Winning range highlight
+                let toGoClass = 'badge-secondary';
+                if (toGo <= 5) toGoClass = 'badge-warning';
+                if (toGo <= 1) toGoClass = 'badge-success animation-pulse'; // Pulse if 1 away!
+
                 list.append(`<tr class="${rowClass}">
                     <td class="pl-3 align-middle">${p.name}</td>
+                    <td class="text-center align-middle"><span class="badge ${toGoClass}" style="min-width: 25px;">${toGo}</span></td>
                     <td class="text-center align-middle"><span class="badge ${badgeClass}" style="min-width: 25px;">${matchCount}</span></td>
                     <td class="text-center align-middle"><span class="badge badge-light border" style="min-width: 25px;">${markedCount}</span></td>
                 </tr>`);

@@ -58,10 +58,11 @@
                     </div>
                     <div class="card-body p-0">
                         <div style="max-height: 200px; overflow-y: auto;">
-                            <table class="table table-sm table-striped mb-0" style="font-size: 0.9rem;">
+                            <table class="table table-sm table-striped mb-0" style="font-size: 1.1rem;">
                                 <thead class="thead-light">
                                     <tr>
                                         <th class="pl-3">Name</th>
+                                        <th class="text-center">To Go</th>
                                         <th class="text-center">Matches</th>
                                         <th class="text-center">Marked</th>
                                     </tr>
