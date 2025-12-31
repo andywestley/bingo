@@ -113,3 +113,6 @@ body {
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
+
+/* Verification Modal Grid (Ported from Player) */
+/* Shared Styles are now in bingo-grid.css */

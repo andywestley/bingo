@@ -11,6 +11,7 @@
 <title>Bingo Host</title>
 
 <link rel="stylesheet" href="WebContent/bingo.css"> 
+<link rel="stylesheet" href="css/bingo-grid.css?v=<?php echo time(); ?>">
 <link rel="stylesheet" href="css/host.css?v=<?php echo time(); ?>">
 
 </head>

@@ -10,6 +10,7 @@
 
 <title>Bingo Player</title>
 <link rel="stylesheet" href="WebContent/bingo.css"> 
+<link rel="stylesheet" href="css/bingo-grid.css?v=<?php echo time(); ?>">
 <link rel="stylesheet" href="css/player.css?v=<?php echo time(); ?>">
 </head>
 <body>
