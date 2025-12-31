@@ -33,7 +33,10 @@
 }
 
 .bingo-cell.empty {
-    background-color: transparent;
+    background-color: rgba(233, 236, 239, 0.3);
+    /* Very faint background */
+    border: 2px dashed #dee2e6;
+    /* Dashed outline */
     cursor: default;
     box-shadow: none !important;
     transform: none !important;
