@@ -29,17 +29,27 @@
     </div>
 
     <div class="row mb-3">
-        <div class="col text-center">
-            <span class="badge badge-info status-badge mb-2">Waiting for numbers...</span>
-            <div class="d-flex justify-content-center align-items-center flex-column">
-                <h3 class="m-0">Last Called</h3>
-                <div id="last-called" class="display-1 font-weight-bold text-primary">--</div>
+        <div class="col-12 text-center mb-2">
+            <span class="badge badge-info status-badge">Waiting for numbers...</span>
+        </div>
+        
+        <div class="col-6 pr-1">
+            <div class="card shadow-sm h-100">
+                <div class="card-header py-1 text-center font-weight-bold bg-primary text-white">Current</div>
+                <div class="card-body d-flex justify-content-center align-items-center p-2">
+                    <div id="last-called" class="display-3 font-weight-bold text-dark">--</div>
+                </div>
             </div>
-            <div class="mt-2">
-                <small class="text-muted text-uppercase font-weight-bold">Recent History</small>
-                <div id="recent-calls" class="d-flex justify-content-center mt-1">
-                    <!-- History items will appear here -->
-                    <span class="badge badge-secondary mx-1 p-2" style="opacity:0.5;">--</span>
+        </div>
+        
+        <div class="col-6 pl-1">
+             <div class="card shadow-sm h-100">
+                <div class="card-header py-1 text-center font-weight-bold bg-secondary text-white">Previous</div>
+                <div class="card-body p-2 d-flex align-items-center justify-content-center">
+                    <div id="recent-calls" class="d-flex flex-wrap justify-content-center" style="gap: 5px;">
+                        <!-- History items will appear here -->
+                        <span class="badge badge-light border p-2">--</span>
+                    </div>
                 </div>
             </div>
         </div>

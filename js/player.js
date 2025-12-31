@@ -153,37 +153,81 @@ $(document).ready(function () {
     let initialSync = false;
 
     // Process Queue Loop (Animation)
-    setInterval(function () {
-        if (!isDisplaying && updateQueue.length > 0) {
-            isDisplaying = true;
-            const num = updateQueue.shift();
+    setInterval(async function () {
+        if (updateQueue.length > 0) {
+            let nextNum = updateQueue.shift();
+            let currentDisplay = $('#last-called').text();
 
-            // Push current to History
-            let previous = $('#last-called').text();
-            if (previous && previous !== '--') {
-                $('#recent-calls').prepend(`<span class="badge badge-secondary mx-1 p-2" style="font-size: 1.2rem;">${previous}</span>`);
+            // If it's the very first number (display is '--'), just show it
+            if (currentDisplay === '--') {
+                $('#last-called').text(nextNum);
+                $(`#num-${nextNum}`).addClass('called');
+                return;
+            }
+
+            // Animate Transition
+            // 1. Create flying element
+            let flyer = $('<div class="flyer">' + currentDisplay + '</div>');
+            let startPos = $('#last-called').offset();
+            let endContainer = $('#recent-calls');
+
+            // Safety check if elements exist
+            if (endContainer.length === 0 || startPos === undefined) {
+                $('#last-called').text(nextNum);
+                $(`#num-${nextNum}`).addClass('called');
+                return;
+            }
+
+            let endPos = endContainer.offset();
+
+            // Aim for center of container
+            let endX = endPos.left + (endContainer.width() / 2) - 10;
+            let endY = endPos.top + (endContainer.height() / 2) - 10;
+
+            $('body').append(flyer);
+            flyer.css({
+                position: 'absolute',
+                top: startPos.top,
+                left: startPos.left,
+                fontSize: '3rem',
+                fontWeight: 'bold',
+                color: '#333',
+                zIndex: 1000,
+                transition: 'all 0.6s ease-in-out'
+            });
+
+            // Trigger Animation (Fly to history)
+            setTimeout(() => {
+                flyer.css({
+                    top: endY,
+                    left: endX,
+                    fontSize: '1rem',
+                    opacity: 0.5
+                });
+            }, 10);
+
+            // 2. Set new number immediately (Fade In)
+            $('#last-called').css('opacity', 0).text(nextNum).animate({ opacity: 1 }, 200);
+
+            // Mark new number on card
+            $(`#num-${nextNum}`).addClass('called');
+
+            // 3. Cleanup after animation
+            setTimeout(() => {
+                flyer.remove();
+
+                // Add to history list
+                let historyHtml = `<span class="badge badge-light border p-2 m-1">${currentDisplay}</span>`;
+                $('#recent-calls').prepend(historyHtml);
+
+                // Limit history
                 if ($('#recent-calls').children().length > 5) {
                     $('#recent-calls').children().last().remove();
                 }
-            }
+            }, 600);
 
-            // Update "Last Called" Display
-            $('#last-called').text(num);
-            $('#last-called').addClass('flash-highlight');
-            setTimeout(() => $('#last-called').removeClass('flash-highlight'), 500);
-
-            Logger.info(`Animating Number: ${num}`);
-
-            // Dynamic Delay
-            let delay = 800;
-            if (updateQueue.length > 2) delay = 400;
-            if (updateQueue.length > 5) delay = 200;
-
-            setTimeout(() => {
-                isDisplaying = false;
-            }, delay);
         }
-    }, 50);
+    }, 2000); // Process every 2 seconds
 
     // Status Polling Loop
     setInterval(async function () {
