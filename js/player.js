@@ -136,13 +136,11 @@ $(document).ready(function () {
     generateCard();
 
     $('#bingo-shout').click(async function () {
-        if (confirm("Are you sure you want to shout BINGO?")) {
-            let result = await shoutBingo(playerName, window.finalCardMatrix);
-            if (result.status === 'success') {
-                $(this).text("SHOUTED!").removeClass('btn-warning').addClass('btn-success').prop('disabled', true);
-            } else {
-                alert("Error shouting: " + result.message);
-            }
+        let result = await shoutBingo(playerName, window.finalCardMatrix);
+        if (result.status === 'success') {
+            $(this).text("SHOUTED!").removeClass('btn-warning').addClass('btn-success').prop('disabled', true);
+        } else {
+            alert("Error shouting: " + result.message);
         }
     });
 
