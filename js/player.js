@@ -99,16 +99,31 @@ $(document).ready(function () {
         Logger.info("Set Player Name: " + playerName);
     } else {
         Logger.info("Loaded Player Name: " + playerName);
-    }
+        // Telemetry & Heartbeat
+        window.matchedNumbers = new Set();
+        function sendHeartbeatWithScore() {
+            let matched = [];
+            let marked = [];
 
-    // Telemetry & Heartbeat
-    window.matchedNumbers = new Set();
-    function sendHeartbeatWithScore() {
-        let score = 0;
-        if (window.myCardNumbers && window.matchedNumbers) {
-            score = new Set([...window.myCardNumbers].filter(x => window.matchedNumbers.has(x))).size;
+            if (window.myCardNumbers && window.matchedNumbers) {
+                // Calculate matched (intersection of Card and Called)
+                matched = [...window.myCardNumbers].filter(x => window.matchedNumbers.has(x)).sort((a, b) => a - b);
+            }
+
+            // Calculate marked (what the user has actually clicked on their card)
+            $('.bingo-number.marked').each(function () {
+                let val = $(this).data('number');
+                if (val) marked.push(parseInt(val));
+            });
+            marked.sort((a, b) => a - b);
+
+            let score = matched.length;
+            // Join as strings for DB
+            let matched_str = matched.join(',');
+            let marked_str = marked.join(',');
+
+            sendHeartbeat(playerId, playerName, score, matched_str, marked_str);
         }
-        sendHeartbeat(playerId, playerName, score);
     }
 
     sendHeartbeatWithScore();
@@ -132,6 +147,15 @@ $(document).ready(function () {
         if (!isDisplaying && updateQueue.length > 0) {
             isDisplaying = true;
             const num = updateQueue.shift();
+
+            // Push current to History
+            let previous = $('#last-called').text();
+            if (previous && previous !== '--') {
+                $('#recent-calls').prepend(`<span class="badge badge-secondary mx-1 p-2" style="font-size: 1.2rem;">${previous}</span>`);
+                if ($('#recent-calls').children().length > 5) {
+                    $('#recent-calls').children().last().remove();
+                }
+            }
 
             // Update "Last Called" Display
             $('#last-called').text(num);
@@ -164,6 +188,14 @@ $(document).ready(function () {
 
                 if (status.current_number) {
                     $('#last-called').text(status.current_number);
+
+                    // Populate History
+                    $('#recent-calls').empty();
+                    // Get last 5 numbers EXCLUDING current
+                    let history = drawn.filter(n => n != status.current_number).slice(-5).reverse();
+                    history.forEach(h => {
+                        $('#recent-calls').append(`<span class="badge badge-secondary mx-1 p-2" style="font-size: 1.2rem;">${h}</span>`);
+                    });
                 }
 
                 drawn.forEach(num => {

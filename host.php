@@ -20,39 +20,52 @@
 		<h1 class="mb-4 text-center" style="font-weight:800; color:#343a40;">Bingo Host <span style="font-weight:300; color:#adb5bd;">(Caller)</span></h1>
 
 		<div class="row host-section" id="top">
-			<div class="col-md-4 mb-3">
+            <!-- Current Ball (Mobile: 1, Desktop: 2) -->
+			<div class="col-md-3 mb-3 order-1 order-md-2">
+				<div class="card host-card">
+					<div class="card-header text-center">Current</div>
+					<div class="card-body text-center d-flex flex-column justify-content-center align-items-center p-2">
+						<div class="current-ball" id="current-number" style="font-size: 5rem;">--</div>
+						<p id="slang" class="slang-text mt-0 mb-0" style="font-size: 1rem;">&nbsp;</p>
+					</div>
+				</div>
+			</div>
+
+            <!-- Previous Ball (Mobile: 2, Desktop: 3) -->
+			<div class="col-md-2 mb-3 order-2 order-md-3">
+				<div class="card host-card">
+					<div class="card-header text-center">Prev</div>
+					<div class="card-body text-center d-flex align-items-center justify-content-center p-2">
+						<div style="font-size: 3rem; color: #ced4da; font-weight:700;" id="previous-number">--</div>
+					</div>
+				</div>
+			</div>
+
+            <!-- Connected Players (Mobile: 3, Desktop: 4) -->
+            <div class="col-md-4 mb-3 order-3 order-md-4">
+                <div class="card host-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        Players
+                        <span id="player-count" class="badge badge-pill badge-info">0</span>
+                    </div>
+                    <div class="card-body p-0">
+                         <ul id="player-list" class="list-group list-group-flush" style="max-height: 200px; overflow-y: auto;">
+                            <!-- Players go here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls (Mobile: 4, Desktop: 1) -->
+			<div class="col-md-3 mb-3 order-4 order-md-1">
 				<div class="card host-card">
 					<div class="card-header d-flex justify-content-between align-items-center">
                         Controls
                         <button class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#helpModal">?</button>
                     </div>
 					<div class="card-body">
-						<button type="button" class="btn btn-primary btn-block mb-3 btn-control shadow-sm" id="pick-ball">Pick Next Ball</button>
-						<button type="button" class="btn btn-outline-danger btn-block btn-control" id="new-game">Reset Game</button>
-                        <hr>
-                        <h6 class="text-uppercase text-muted" style="font-size:0.8rem; letter-spacing:1px; font-weight:700;">Connected Players <span id="player-count" class="badge badge-pill badge-info">0</span></h6>
-                        <ul id="player-list" class="list-group list-group-flush mt-3" style="max-height: 200px; overflow-y: auto;">
-                            <!-- Players go here -->
-                        </ul>
-					</div>
-				</div>
-
-			</div>
-			<div class="col-md-4 mb-3">
-				<div class="card host-card">
-					<div class="card-header text-center">Current Ball</div>
-					<div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
-						<div class="current-ball" id="current-number">--</div>
-						<p id="slang" class="slang-text mt-2">&nbsp;</p>
-					</div>
-				</div>
-
-			</div>
-			<div class="col-md-4 mb-3">
-				<div class="card host-card">
-					<div class="card-header text-center">Previous</div>
-					<div class="card-body text-center d-flex align-items-center justify-content-center">
-						<div style="font-size: 4rem; color: #ced4da; font-weight:700;" id="previous-number">--</div>
+						<button type="button" class="btn btn-primary btn-block mb-3 btn-control shadow-sm" id="pick-ball">Next Ball</button>
+						<button type="button" class="btn btn-outline-danger btn-block btn-control" id="new-game">Reset</button>
 					</div>
 				</div>
 			</div>
@@ -190,8 +203,25 @@
                     const list = $('#player-list');
                     list.empty();
                     data.players.forEach(p => {
-                        let scoreDisplay = (p.score !== undefined) ? ` <span class="badge badge-primary float-right">${p.score}</span>` : '';
-                        list.append(`<li class="list-group-item player-list-item clearfix">${p.name}${scoreDisplay}</li>`);
+                        let score = p.score || 0;
+                        let matched = p.matched_str ? p.matched_str.split(',') : [];
+                        let marked = p.marked_str ? p.marked_str.split(',') : [];
+                        
+                        // Create visual indicators
+                        let info = `<div style="font-size: 0.8rem; color: #666;">
+                            Matches: <span class="text-success">${matched.join(', ') || '-'}</span><br>
+                            Marked: <span class="text-info">${marked.join(', ') || '-'}</span>
+                        </div>`;
+                        
+                        let badgeClass = (score >= 4) ? 'badge-danger' : (score > 0 ? 'badge-primary' : 'badge-secondary');
+                        
+                        list.append(`<li class="list-group-item player-list-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>${p.name}</strong>
+                                <span class="badge ${badgeClass}">${score}</span>
+                            </div>
+                            ${info}
+                        </li>`);
                     });
                 } else {
                     Logger.warn("Failed to get player list or empty response");

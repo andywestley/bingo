@@ -22,8 +22,18 @@
 
     <div class="row mb-3">
         <div class="col text-center">
-            <span class="badge badge-info status-badge">Waiting for numbers...</span>
-            <h3>Last Called: <span id="last-called">--</span></h3>
+            <span class="badge badge-info status-badge mb-2">Waiting for numbers...</span>
+            <div class="d-flex justify-content-center align-items-center flex-column">
+                <h3 class="m-0">Last Called</h3>
+                <div id="last-called" class="display-1 font-weight-bold text-primary">--</div>
+            </div>
+            <div class="mt-2">
+                <small class="text-muted text-uppercase font-weight-bold">Recent History</small>
+                <div id="recent-calls" class="d-flex justify-content-center mt-1">
+                    <!-- History items will appear here -->
+                    <span class="badge badge-secondary mx-1 p-2" style="opacity:0.5;">--</span>
+                </div>
+            </div>
         </div>
     </div>
 

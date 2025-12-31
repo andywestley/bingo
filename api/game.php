@@ -111,11 +111,26 @@ switch ($action) {
          try {
             $db->exec("ALTER TABLE players ADD COLUMN score INTEGER DEFAULT 0");
          } catch(Exception $e) { /* Ignore if exists */ }
+         
+         try {
+            $db->exec("ALTER TABLE players ADD COLUMN matched_str TEXT DEFAULT ''");
+         } catch(Exception $e) { /* Ignore */ }
+         
+         try {
+            $db->exec("ALTER TABLE players ADD COLUMN marked_str TEXT DEFAULT ''");
+         } catch(Exception $e) { /* Ignore */ }
 
          // Upsert player
-         $stmt = $db->prepare("INSERT INTO players (id, name, score, last_seen) VALUES (:id, :name, :score, CURRENT_TIMESTAMP) 
-                               ON CONFLICT(id) DO UPDATE SET name = :name, score = :score, last_seen = CURRENT_TIMESTAMP");
-         $stmt->execute([':id' => $id, ':name' => $name, ':score' => $score]);
+         $stmt = $db->prepare("INSERT INTO players (id, name, score, matched_str, marked_str, last_seen) 
+                               VALUES (:id, :name, :score, :matched, :marked, CURRENT_TIMESTAMP) 
+                               ON CONFLICT(id) DO UPDATE SET name = :name, score = :score, matched_str = :matched, marked_str = :marked, last_seen = CURRENT_TIMESTAMP");
+         $stmt->execute([
+             ':id' => $id, 
+             ':name' => $name, 
+             ':score' => $score,
+             ':matched' => $matched,
+             ':marked' => $marked
+         ]);
          echo json_encode(['status' => 'success']);
          break;
 

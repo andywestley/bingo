@@ -39,7 +39,7 @@ async function getStatus() {
     return await apiCall('get_status');
 }
 
-async function sendHeartbeat(id, name, score = 0) {
+async function sendHeartbeat(id, name, score = 0, matched_str = "", marked_str = "") {
     Logger.debug(`Sending Heartbeat: ${name} (${id}) - Score: ${score}`);
     try {
         const formData = new FormData();
@@ -47,6 +47,8 @@ async function sendHeartbeat(id, name, score = 0) {
         formData.append('id', id);
         formData.append('name', name);
         formData.append('score', score);
+        formData.append('matched', matched_str);
+        formData.append('marked', marked_str);
         const response = await fetch(API_URL, { method: 'POST', body: formData });
         const data = await response.json();
 
