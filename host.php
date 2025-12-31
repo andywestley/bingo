@@ -22,25 +22,32 @@
 		<h1 class="mb-4 text-center" style="font-weight:800; color:#343a40;">Bingo Host <span style="font-weight:300; color:#adb5bd;">(Caller)</span></h1>
 
 		<div class="row host-section" id="top">
-			<div class="col-md-3 mb-3 order-2 order-md-2">
-				<div class="card bingo-card host-card">
-					<div class="card-header text-center">Current</div>
-					<div class="card-body text-center d-flex flex-column justify-content-center align-items-center p-2">
-						<div class="current-ball" id="current-number" style="font-size: 5rem;">--</div>
-						<p id="slang" class="slang-text mt-0 mb-0" style="font-size: 1rem;">&nbsp;</p>
-					</div>
-				</div>
-			</div>
-
-            <!-- Previous Ball (Mobile: 3, Desktop: 3) -->
-			<div class="col-md-2 mb-3 order-3 order-md-3">
-				<div class="card bingo-card host-card">
-					<div class="card-header text-center">Prev</div>
-					<div class="card-body text-center d-flex align-items-center justify-content-center p-2">
-						<div style="font-size: 3rem; color: #ced4da; font-weight:700;" id="previous-number">--</div>
-					</div>
-				</div>
-			</div>
+            <!-- Calling Area (Mobile: 2, Desktop: 2) -->
+            <div class="col-md-5 mb-3 order-2 order-md-2">
+                <div class="row no-gutters">
+                    <!-- Current Number -->
+                    <div class="col-6 pr-1">
+                        <div class="card bingo-card host-card h-100">
+                             <div class="card-header text-center">Current</div>
+                             <div class="card-body text-center d-flex flex-column justify-content-center align-items-center p-2">
+                                 <div class="current-ball" id="current-number" style="font-size: 5rem;">--</div>
+                                 <p id="slang" class="slang-text mt-0 mb-0" style="font-size: 1rem;">&nbsp;</p>
+                             </div>
+                        </div>
+                    </div>
+                    <!-- Previous Numbers History -->
+                    <div class="col-6 pl-1">
+                        <div class="card bingo-card host-card h-100">
+                            <div class="card-header text-center">History</div>
+                            <div class="card-body p-2 d-flex align-items-center justify-content-center">
+                                <div id="host-recent-calls" class="d-flex flex-wrap justify-content-start align-content-start" style="gap: 5px; width: 100%; min-height: 50px;">
+                                    <span class="badge badge-light border p-2 m-1">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Connected Players (Mobile: 4, Desktop: 4) -->
             <div class="col-md-4 mb-3 order-4 order-md-4">
@@ -161,6 +168,7 @@
  
     <script src="js/logger.js?v=<?php echo time(); ?>"></script>
 	<script src="js/bingo-client.js?v=<?php echo time(); ?>"></script>
+    <script src="js/bingo-ui.js?v=<?php echo time(); ?>"></script>
     <script>
         $(document).ready(function() {
             Logger.info("Host View Initialized");
@@ -179,13 +187,59 @@
 
             // Pick Ball
             $('#pick-ball').click(async function() {
+                // Disable button during animation
+                $(this).prop('disabled', true);
+                
                 const result = await drawBall();
                 if(result.status === 'success') {
-                    updateBoard(result.current_number, result.drawn_numbers);
+                    await updateBoardAnim(result.current_number);
                 } else if(result.status === 'error') {
                     alert(result.message);
                 }
+                
+                $(this).prop('disabled', false);
             });
+
+            async function updateBoardAnim(current) {
+                 // Mark board
+                 $(`#ball-${current}`).addClass('called');
+                 
+                 let currentEl = $('#current-number');
+                 let historyContainer = $('#host-recent-calls');
+                 
+                 // Slang
+                 $('#slang').text(getNumberSlang(current));
+
+                 // Animate
+                 await BingoUI.animateTransition(current, currentEl, historyContainer);
+            }
+            
+            // Initial Load Logic (No animation)
+            function updateDisplayInitial(current, drawnHistory) {
+                if(current) {
+                    $('#current-number').text(current);
+                    $('#slang').text(getNumberSlang(current));
+                }
+                
+                // Populate history
+                let histContainer = $('#host-recent-calls');
+                histContainer.empty();
+                
+                if (drawnHistory && drawnHistory.length > 0) {
+                     // Filter out current, take last 5, reverse for display
+                     let historyItems = drawnHistory.filter(n => n != current).slice(-5).reverse();
+                     
+                     if (historyItems.length === 0 && !current) {
+                         histContainer.append('<span class="badge badge-light border p-2 m-1">--</span>');
+                     } else {
+                         historyItems.forEach(h => {
+                             histContainer.append(`<span class="badge badge-light border p-2 m-1 history-item" style="font-size: 1.2rem;">${h}</span>`);
+                         });
+                     }
+                } else {
+                     histContainer.append('<span class="badge badge-light border p-2 m-1">--</span>');
+                }
+            }
 
             // Poll for status initially to populate board if page refreshed
              async function refreshBoard() {
@@ -202,44 +256,15 @@
                 }
 
                 if(status && status.drawn_numbers) {
-                     // Find previous number (if any)
                      let current = status.current_number;
-                     let previous = null;
-                     if(status.drawn_numbers.length > 1) {
-                         // The drawn_numbers array order isn't guaranteed to be time-sorted from the DB JSON, 
-                         // but for now let's assume the last drawn is current. 
-                         // Actually the DB saves them in order.
-                         let len = status.drawn_numbers.length;
-                         if (status.drawn_numbers[len-1] == current) {
-                             previous = status.drawn_numbers[len-2];
-                         }
-                     }
-                     updateDisplay(current, previous);
+                     
+                     // Initial update (no animation)
+                     updateDisplayInitial(current, status.drawn_numbers);
                      
                      // Highlight all
                      status.drawn_numbers.forEach(num => {
                          $(`#ball-${num}`).addClass('called');
                      });
-                }
-            }
-            
-            function updateBoard(current, allDrawn) {
-                 // Update numbers
-                 $(`#ball-${current}`).addClass('called');
-                 
-                 let previous = $('#current-number').text();
-                 if(previous === '--') previous = null;
-                 
-                 updateDisplay(current, previous);
-            }
-
-            function updateDisplay(current, previous) {
-                if(current) {
-                    $('#current-number').text(current);
-                    $('#slang').text(getNumberSlang(current));
-                }
-                if(previous) {
-                    $('#previous-number').text(previous);
                 }
             }
 

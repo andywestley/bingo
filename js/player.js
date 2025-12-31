@@ -156,76 +156,14 @@ $(document).ready(function () {
     setInterval(async function () {
         if (updateQueue.length > 0) {
             let nextNum = updateQueue.shift();
-            let currentDisplay = $('#last-called').text();
+            let currentEl = $('#last-called');
+            let historyContainer = $('#recent-calls');
 
-            // If it's the very first number (display is '--'), just show it
-            if (currentDisplay === '--') {
-                $('#last-called').text(nextNum);
-                $(`#num-${nextNum}`).addClass('called');
-                return;
-            }
-
-            // Animate Transition
-            // 1. Create flying element
-            let flyer = $('<div class="flyer">' + currentDisplay + '</div>');
-            let startPos = $('#last-called').offset();
-            let endContainer = $('#recent-calls');
-
-            // Safety check if elements exist
-            if (endContainer.length === 0 || startPos === undefined) {
-                $('#last-called').text(nextNum);
-                $(`#num-${nextNum}`).addClass('called');
-                return;
-            }
-
-            let endPos = endContainer.offset();
-
-            // Aim for center of container
-            let endX = endPos.left + (endContainer.width() / 2) - 10;
-            let endY = endPos.top + (endContainer.height() / 2) - 10;
-
-            $('body').append(flyer);
-            flyer.css({
-                position: 'absolute',
-                top: startPos.top,
-                left: startPos.left,
-                fontSize: '3rem',
-                fontWeight: 'bold',
-                color: '#333',
-                zIndex: 1000,
-                transition: 'all 0.6s ease-in-out'
-            });
-
-            // Trigger Animation (Fly to history)
-            setTimeout(() => {
-                flyer.css({
-                    top: endY,
-                    left: endX,
-                    fontSize: '1rem',
-                    opacity: 0.5
-                });
-            }, 10);
-
-            // 2. Set new number immediately (Fade In)
-            $('#last-called').css('opacity', 0).text(nextNum).animate({ opacity: 1 }, 200);
-
-            // Mark new number on card
+            // Mark card immediately (so player can click while animation happens)
             $(`#num-${nextNum}`).addClass('called');
 
-            // 3. Cleanup after animation
-            setTimeout(() => {
-                flyer.remove();
-
-                // Add to history list
-                let historyHtml = `<span class="badge badge-light border p-2 m-1">${currentDisplay}</span>`;
-                $('#recent-calls').prepend(historyHtml);
-
-                // Limit history
-                if ($('#recent-calls').children().length > 5) {
-                    $('#recent-calls').children().last().remove();
-                }
-            }, 600);
-
+            // Run Animation
+            await BingoUI.animateTransition(nextNum, currentEl, historyContainer);
         }
     }, 2000); // Process every 2 seconds
 

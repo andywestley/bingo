@@ -48,7 +48,7 @@
              <div class="card bingo-card shadow-sm h-100">
                 <div class="card-header py-1 text-center font-weight-bold bg-secondary text-white">Previous</div>
                 <div class="card-body p-2 d-flex align-items-center justify-content-center">
-                    <div id="recent-calls" class="d-flex flex-wrap justify-content-center" style="gap: 5px;">
+                    <div id="recent-calls" class="d-flex flex-wrap justify-content-start align-content-start" style="gap: 5px; width: 100%; min-height: 50px;">
                         <!-- History items will appear here -->
                         <span class="badge badge-light border p-2">--</span>
                     </div>
@@ -93,6 +93,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 <script src="js/logger.js?v=<?php echo time(); ?>"></script>
 <script src="js/bingo-client.js?v=<?php echo time(); ?>"></script>
+<script src="js/bingo-ui.js?v=<?php echo time(); ?>"></script>
 <script src="js/player.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
