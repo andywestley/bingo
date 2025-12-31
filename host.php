@@ -20,8 +20,7 @@
 		<h1 class="mb-4 text-center" style="font-weight:800; color:#343a40;">Bingo Host <span style="font-weight:300; color:#adb5bd;">(Caller)</span></h1>
 
 		<div class="row host-section" id="top">
-            <!-- Current Ball (Mobile: 1, Desktop: 2) -->
-			<div class="col-md-3 mb-3 order-1 order-md-2">
+			<div class="col-md-3 mb-3 order-2 order-md-2">
 				<div class="card host-card">
 					<div class="card-header text-center">Current</div>
 					<div class="card-body text-center d-flex flex-column justify-content-center align-items-center p-2">
@@ -31,8 +30,8 @@
 				</div>
 			</div>
 
-            <!-- Previous Ball (Mobile: 2, Desktop: 3) -->
-			<div class="col-md-2 mb-3 order-2 order-md-3">
+            <!-- Previous Ball (Mobile: 3, Desktop: 3) -->
+			<div class="col-md-2 mb-3 order-3 order-md-3">
 				<div class="card host-card">
 					<div class="card-header text-center">Prev</div>
 					<div class="card-body text-center d-flex align-items-center justify-content-center p-2">
@@ -41,8 +40,8 @@
 				</div>
 			</div>
 
-            <!-- Connected Players (Mobile: 3, Desktop: 4) -->
-            <div class="col-md-4 mb-3 order-3 order-md-4">
+            <!-- Connected Players (Mobile: 4, Desktop: 4) -->
+            <div class="col-md-4 mb-3 order-4 order-md-4">
                 <div class="card host-card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         Players
@@ -56,8 +55,8 @@
                 </div>
             </div>
 
-            <!-- Controls (Mobile: 4, Desktop: 1) -->
-			<div class="col-md-3 mb-3 order-4 order-md-1">
+            <!-- Controls (Mobile: 1, Desktop: 1) -->
+			<div class="col-md-3 mb-3 order-1 order-md-1">
 				<div class="card host-card">
 					<div class="card-header d-flex justify-content-between align-items-center">
                         Controls

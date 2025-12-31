@@ -20,6 +20,14 @@
         <button class="btn btn-outline-info btn-sm position-absolute" style="right: 0;" data-toggle="modal" data-target="#playerHelpModal">?</button>
     </div>
 
+    <div id="card-area" class="mt-4">
+        <!-- Card will be generated here -->
+    </div>
+    
+    <div class="text-center mt-4 mb-4">
+        <button id="bingo-shout" class="btn btn-warning btn-lg btn-block">BINGO!</button>
+    </div>
+
     <div class="row mb-3">
         <div class="col text-center">
             <span class="badge badge-info status-badge mb-2">Waiting for numbers...</span>
@@ -35,14 +43,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div id="card-area" class="mt-4">
-        <!-- Card will be generated here -->
-    </div>
-    
-    <div class="text-center mt-4">
-        <button id="bingo-shout" class="btn btn-warning btn-lg btn-block">BINGO!</button>
     </div>
 </div>
 
