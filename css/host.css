@@ -1,0 +1,115 @@
+/* Premium Host UI */
+:root {
+    --primary-color: #ffc107;
+    --success-color: #28a745;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #343a40;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.host-section {
+    margin-bottom: 20px;
+}
+
+/* Card Styling (Shared feel with Player) */
+.host-card {
+    background: var(--card-bg);
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* Softer shadow */
+    transition: transform 0.2s;
+    height: 100%;
+    overflow: hidden;
+}
+
+.host-card .card-header {
+    background: transparent;
+    border-bottom: 2px solid #f1f3f5;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #adb5bd;
+    font-size: 0.9rem;
+    padding: 15px 20px;
+}
+
+.host-card .card-body {
+    padding: 20px;
+}
+
+/* Main Number Display */
+.current-ball {
+    font-size: 6rem;
+    font-weight: 800;
+    color: var(--text-color);
+    line-height: 1;
+}
+
+.slang-text {
+    font-size: 1.5rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* The Board - 90 Numbers */
+.host-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    /* 10 cols */
+    grid-gap: 6px;
+    padding: 10px;
+}
+
+.host-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e9ecef;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #adb5bd;
+    /* Dimmed by default */
+    user-select: none;
+}
+
+/* Called State */
+.host-cell.called {
+    background-color: var(--primary-color);
+    color: #fff;
+    font-weight: 800;
+    box-shadow: 0 4px 6px rgba(255, 193, 7, 0.4);
+    transform: scale(1.1);
+    z-index: 2;
+    /* Pop out */
+    border: 2px solid #fff;
+}
+
+/* Player List */
+.player-list-item {
+    border: none;
+    border-radius: 8px !important;
+    margin-bottom: 5px;
+    background-color: #f8f9fa;
+    transition: background-color 0.2s;
+}
+
+.player-list-item:hover {
+    background-color: #e9ecef;
+}
+
+/* Controls */
+.btn-control {
+    border-radius: 10px;
+    padding: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}

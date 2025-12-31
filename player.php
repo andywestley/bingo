@@ -10,52 +10,16 @@
 
 <title>Bingo Player</title>
 <link rel="stylesheet" href="WebContent/bingo.css"> 
-<style>
-    .player-card {
-        border: 2px solid #333;
-        border-radius: 10px;
-        padding: 10px;
-        background-color: #f8f9fa;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    .bingo-row {
-        display: flex;
-        height: 60px;
-        border-bottom: 1px solid #ccc;
-    }
-    .bingo-row:last-child {
-        border-bottom: none;
-    }
-    .bingo-cell {
-        flex: 1;
-        border-right: 1px solid #ccc;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 1.2rem;
-    }
-    .bingo-cell:last-child {
-        border-right: none;
-    }
-    .daubed {
-        background-color: #28a745;
-        color: white;
-        border-radius: 50%;
-        width: 80%;
-        height: 80%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: auto;
-    }
-</style>
+<link rel="stylesheet" href="css/player.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
 <div class="container mt-5">
-    <h1 class="text-center">Bingo Player</h1>
+    <div class="d-flex justify-content-center align-items-center position-relative mb-4">
+        <h1 class="text-center m-0">Bingo Player</h1>
+        <button class="btn btn-outline-info btn-sm position-absolute" style="right: 0;" data-toggle="modal" data-target="#playerHelpModal">?</button>
+    </div>
+
     <div class="row mb-3">
         <div class="col text-center">
             <span class="badge badge-info status-badge">Waiting for numbers...</span>
@@ -70,6 +34,36 @@
     <div class="text-center mt-4">
         <button id="bingo-shout" class="btn btn-warning btn-lg btn-block">BINGO!</button>
     </div>
+</div>
+
+<!-- Player Help Modal -->
+<div class="modal fade" id="playerHelpModal" tabindex="-1" role="dialog" aria-labelledby="playerHelpLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="playerHelpLabel">How to Play</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ol>
+            <li><strong>Listen</strong> for the numbers called by the host.</li>
+            <li><strong>Watch</strong> for "Last Called" updates on your screen.</li>
+            <li><strong>Click</strong> numbers on your card to mark them.
+                <ul>
+                    <li><span class="text-success">Green</span> = Marked by you.</li>
+                    <li><span class="text-warning">Gold Border</span> = Called by Host.</li>
+                </ul>
+            </li>
+            <li><strong>Win</strong> by marking all numbers on your card and shouting <strong>BINGO!</strong></li>
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Got it!</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>

@@ -39,19 +39,25 @@ function generateCard() {
     // Sort columns
     for (let c = 0; c < 9; c++) finalNumbers[c].sort((a, b) => a - b);
 
+    // Generate HTML using CSS Grid (Flat list of cells, row by row)
     let html = '<div class="player-card">';
-    html += '<div class="row">';
-    for (let c = 0; c < 9; c++) {
-        html += `<div class="col text-center border-right">`;
-        for (let r = 0; r < 3; r++) {
-            let num = finalNumbers[c][r] || '&nbsp;';
-            let id = (typeof num === 'number') ? `num-${num}` : '';
-            let val = (typeof num === 'number') ? num : '';
-            html += `<div class="p-2 border-bottom ${id ? 'bingo-number' : ''}" id="${id}" data-number="${val}" style="height:50px;">${num}</div>`;
+    html += '<div class="bingo-grid">';
+
+    // Iterate Rows (0..2)
+    for (let r = 0; r < 3; r++) {
+        // Iterate Cols (0..8)
+        for (let c = 0; c < 9; c++) {
+            let num = finalNumbers[c][r]; // May be undefined if empty slot
+
+            if (num) {
+                html += `<div class="bingo-cell bingo-number" id="num-${num}" data-number="${num}">${num}</div>`;
+            } else {
+                html += `<div class="bingo-cell empty"></div>`;
+            }
         }
-        html += `</div>`;
     }
-    html += '</div></div>';
+
+    html += '</div></div>'; // Close grid and card
 
     $('#card-area').html(html);
 
@@ -65,7 +71,7 @@ function generateCard() {
 
     // Add click handler
     $('.bingo-number').click(function () {
-        $(this).toggleClass('bg-success text-white');
+        $(this).toggleClass('marked'); // Use 'marked' class instead of bootstrap util
     });
 }
 
@@ -161,7 +167,7 @@ $(document).ready(function () {
                 }
 
                 drawn.forEach(num => {
-                    $(`#num-${num}`).css('border', '4px solid #ffca28').addClass('called');
+                    $(`#num-${num}`).addClass('called');
                     if (window.matchedNumbers) window.matchedNumbers.add(num);
                 });
 
@@ -177,7 +183,7 @@ $(document).ready(function () {
                 newNumbers.forEach(n => {
                     const el = $(`#num-${n}`);
                     if (el.length) {
-                        el.css('border', '4px solid #ffca28');
+                        el.addClass('called');
                         el.addClass('flash-highlight');
                     }
                     if (window.matchedNumbers) window.matchedNumbers.add(n);

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Bingo Player (Preview)</title>
+    <link rel="stylesheet" href="../WebContent/bingo.css">
+    <link rel="stylesheet" href="../css/player.css">
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <h1 class="text-center">Bingo Player</h1>
+        <div class="row mb-3">
+            <div class="col text-center">
+                <span class="badge badge-info status-badge">Waiting for numbers...</span>
+                <h3>Last Called: <span id="last-called">--</span></h3>
+            </div>
+        </div>
+
+        <div id="card-area" class="mt-4">
+            <!-- Card will be generated here by js/player.js -->
+        </div>
+
+        <div class="text-center mt-4">
+            <button id="bingo-shout" class="btn btn-warning btn-lg btn-block">BINGO!</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="../js/logger.js"></script>
+    <script src="../js/bingo-client.js"></script>
+    <script src="../js/player.js"></script>
+</body>
+
+</html>

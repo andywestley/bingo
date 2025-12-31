@@ -11,57 +11,62 @@
 <title>Bingo Host</title>
 
 <link rel="stylesheet" href="WebContent/bingo.css"> 
+<link rel="stylesheet" href="css/host.css?v=<?php echo time(); ?>">
 
 </head>
 <body>
 
-	<div class="container">
-		<h1>Bingo Host (Caller)</h1>
+	<div class="container mt-4">
+		<h1 class="mb-4 text-center" style="font-weight:800; color:#343a40;">Bingo Host <span style="font-weight:300; color:#adb5bd;">(Caller)</span></h1>
 
-		<div class="row" id="top">
-			<div class="col-4">
-				<div class="card h-100">
-					<div class="card-header">Controls</div>
+		<div class="row host-section" id="top">
+			<div class="col-md-4 mb-3">
+				<div class="card host-card">
+					<div class="card-header d-flex justify-content-between align-items-center">
+                        Controls
+                        <button class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#helpModal">?</button>
+                    </div>
 					<div class="card-body">
-						<button type="button" class="btn btn-primary btn-block mb-3" id="pick-ball">Pick next number</button>
-						<button type="button" class="btn btn-danger btn-block" id="new-game">Start new game</button>
+						<button type="button" class="btn btn-primary btn-block mb-3 btn-control shadow-sm" id="pick-ball">Pick Next Ball</button>
+						<button type="button" class="btn btn-outline-danger btn-block btn-control" id="new-game">Reset Game</button>
                         <hr>
-                        <h5>Connected Players: <span id="player-count">0</span></h5>
-                        <ul id="player-list" class="list-group list-group-flush" style="max-height: 200px; overflow-y: auto;">
+                        <h6 class="text-uppercase text-muted" style="font-size:0.8rem; letter-spacing:1px; font-weight:700;">Connected Players <span id="player-count" class="badge badge-pill badge-info">0</span></h6>
+                        <ul id="player-list" class="list-group list-group-flush mt-3" style="max-height: 200px; overflow-y: auto;">
                             <!-- Players go here -->
                         </ul>
 					</div>
 				</div>
 
 			</div>
-			<div class="col-4">
-				<div class="card h-100">
-					<div class="card-header">Current number</div>
-					<div class="card-body text-center">
-						<h2 class="card-title ball" style="font-size: 4rem;" id="current-number">--</h2>
-						<p id="slang" class="text-muted"></p>
+			<div class="col-md-4 mb-3">
+				<div class="card host-card">
+					<div class="card-header text-center">Current Ball</div>
+					<div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
+						<div class="current-ball" id="current-number">--</div>
+						<p id="slang" class="slang-text mt-2">&nbsp;</p>
 					</div>
 				</div>
 
 			</div>
-			<div class="col-4">
-				<div class="card h-100">
-					<div class="card-header">Previous number</div>
-					<div class="card-body text-center">
-						<h2 class="card-title ball" id="previous-number">--</h2>
+			<div class="col-md-4 mb-3">
+				<div class="card host-card">
+					<div class="card-header text-center">Previous</div>
+					<div class="card-body text-center d-flex align-items-center justify-content-center">
+						<div style="font-size: 4rem; color: #ced4da; font-weight:700;" id="previous-number">--</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="row" id="card">
-			<div class="col-12 mt-3">
+		
+		<div class="row host-section" id="card">
+			<div class="col-12">
 
-				<div class="card h-100">
-					<div class="card-header" id="remaining-numbers-label">Called Numbers</div>
+				<div class="card host-card">
+					<div class="card-header" id="remaining-numbers-label">Master Board</div>
 					<div class="card-body">
-						<div class="row">
+						<div class="host-grid">
                             <?php for($i=1; $i<=90; $i++): ?>
-							    <div class="col-1 number-card" id="ball-<?php echo $i; ?>"><?php echo $i; ?></div>
+							    <div class="host-cell" id="ball-<?php echo $i; ?>"><?php echo $i; ?></div>
                             <?php endfor; ?>
 						</div>
 					</div>
@@ -71,6 +76,31 @@
 		</div>
 
 	</div>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="helpModalLabel">Host Instructions</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <ul>
+                <li><strong>Pick Next Ball</strong>: Draws a random number (1-90).</li>
+                <li><strong>Reset Game</strong>: Clears the board for everyone. Warning: This cannot be undone!</li>
+                <li><strong>Connected Players</strong>: Shows who is currently ready to play.</li>
+                <li><strong>Master Board</strong>: Use this to verify numbers when a player shouts "Bingo!".</li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
 	<!-- Optional JavaScript -->
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
@@ -161,7 +191,7 @@
                     list.empty();
                     data.players.forEach(p => {
                         let scoreDisplay = (p.score !== undefined) ? ` <span class="badge badge-primary float-right">${p.score}</span>` : '';
-                        list.append(`<li class="list-group-item py-1 clearfix">${p.name}${scoreDisplay}</li>`);
+                        list.append(`<li class="list-group-item player-list-item clearfix">${p.name}${scoreDisplay}</li>`);
                     });
                 } else {
                     Logger.warn("Failed to get player list or empty response");

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Bingo Host (Preview)</title>
+
+    <link rel="stylesheet" href="../WebContent/bingo.css">
+    <link rel="stylesheet" href="../css/host.css">
+
+</head>
+
+<body>
+
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center" style="font-weight:800; color:#343a40;">Bingo Host <span
+                style="font-weight:300; color:#adb5bd;">(Caller)</span></h1>
+
+        <div class="row host-section" id="top">
+            <div class="col-md-4 mb-3">
+                <div class="card host-card">
+                    <div class="card-header">Controls</div>
+                    <div class="card-body">
+                        <button type="button" class="btn btn-primary btn-block mb-3 btn-control shadow-sm"
+                            id="pick-ball">Pick Next Ball</button>
+                        <button type="button" class="btn btn-outline-danger btn-block btn-control" id="new-game">Reset
+                            Game</button>
+                        <hr>
+                        <h6 class="text-uppercase text-muted"
+                            style="font-size:0.8rem; letter-spacing:1px; font-weight:700;">Connected Players <span
+                                id="player-count" class="badge badge-pill badge-info">3</span></h6>
+                        <ul id="player-list" class="list-group list-group-flush mt-3"
+                            style="max-height: 200px; overflow-y: auto;">
+                            <!-- Mock Data for Preview -->
+                            <li class="list-group-item player-list-item clearfix">Alice <span
+                                    class="badge badge-warning float-right text-white">2</span></li>
+                            <li class="list-group-item player-list-item clearfix">Bob <span
+                                    class="badge badge-secondary float-right">0</span></li>
+                            <li class="list-group-item player-list-item clearfix">Charlie <span
+                                    class="badge badge-warning float-right text-white">4</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card host-card">
+                    <div class="card-header text-center">Current Ball</div>
+                    <div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
+                        <div class="current-ball" id="current-number">88</div>
+                        <div id="slang" class="slang-text mt-2">Two Fat Ladies</div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card host-card">
+                    <div class="card-header text-center">Previous</div>
+                    <div class="card-body text-center d-flex align-items-center justify-content-center">
+                        <div style="font-size: 4rem; color: #ced4da; font-weight:700;" id="previous-number">22</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row host-section" id="card">
+            <div class="col-12">
+
+                <div class="card host-card">
+                    <div class="card-header">Master Board</div>
+                    <div class="card-body">
+                        <div class="host-grid">
+                            <!-- Generate 90 balls statically for preview -->
+                            <script>
+                                for (let i = 1; i <= 90; i++) {
+                                    let cls = (i === 88 || i === 22) ? 'called' : '';
+                                    // Add some random "past" calls for visual testing
+                                    if ([4, 12, 45, 67].includes(i)) cls = 'called';
+
+                                    document.write(`<div class="host-cell ${cls}" id="ball-${i}">${i}</div>`);
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Optional JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+    <script src="../js/logger.js"></script>
+    <script src="../js/bingo-client.js"></script>
+    <script>
+        // Mock Implementation for Preview only
+        $(document).ready(function () {
+            Logger.info("Host Preview Loaded");
+        });
+    </script>
+</body>
+
+</html>
