@@ -166,8 +166,21 @@ $(document).ready(function () {
         html += '</div>';
 
         $('#winner-card-container').html(html);
+        $('#winner-card-container').html(html);
         $('#verificationModal').modal('show');
     }
+
+    // Confirm Win & End Game
+    $('#confirm-win').click(async function () {
+        if (confirm("Confirm this player has won and return all players to the lobby?")) {
+            const result = await apiCall('reset_game');
+            if (result.status === 'success') {
+                location.reload();
+            } else {
+                alert("Error: " + result.message);
+            }
+        }
+    });
 
     // Player Polling
     setInterval(async function () {

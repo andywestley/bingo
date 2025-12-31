@@ -159,7 +159,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close & Continue</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm-win">Details Confirmed</button>
+            <button type="button" class="btn btn-primary" id="confirm-win">Confirm Game End</button>
           </div>
         </div>
       </div>
