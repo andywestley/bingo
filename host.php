@@ -84,7 +84,13 @@
                         <button class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#helpModal">?</button>
                     </div>
 					<div class="card-body">
-						<button id="start-game" class="btn btn-success btn-lg btn-block mb-3" style="display:none;">Start Game</button>
+						<div id="lobby-controls" style="display:none;">
+							<div class="custom-control custom-checkbox mb-3">
+								<input type="checkbox" class="custom-control-input" id="beginner-mode">
+								<label class="custom-control-label" for="beginner-mode">Beginner Mode (Show Hints)</label>
+							</div>
+							<button id="start-game" class="btn btn-success btn-lg btn-block mb-3">Start Game</button>
+						</div>
 						<button id="pick-ball" class="btn btn-primary btn-lg btn-block">Next Ball</button>
 						<button type="button" class="btn btn-outline-danger btn-block btn-control" id="new-game">Reset</button>
 					</div>

@@ -61,14 +61,19 @@
     color: white !important;
 }
 
-.bingo-cell.called {
+/* Called cell styling - Only in Beginner Mode */
+.beginner-mode-active .bingo-cell.called {
     border: 3px solid #ffc107;
     /* Gold Border */
     animation: pulse-border 1.5s infinite;
 }
 
+/* If marked AND called, always show green bg, but only show border in beginner mode */
 .bingo-cell.marked.called {
     background-color: #28a745;
+}
+
+.beginner-mode-active .bingo-cell.marked.called {
     border: 3px solid #ffc107;
 }
 

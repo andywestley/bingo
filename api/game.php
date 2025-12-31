@@ -66,9 +66,18 @@ switch ($action) {
 
     case 'start_game':
         initDb($db);
-        // Set status to PLAYING
-        $stmt = $db->prepare("UPDATE game_state SET status = 'PLAYING', started_at = CURRENT_TIMESTAMP WHERE id = 1");
-        $stmt->execute();
+        $beginnerMode = $_POST['beginner_mode'] ?? 'false';
+        $beginnerModeVal = ($beginnerMode === 'true') ? 1 : 0;
+        
+        // Ensure column exists
+        try {
+            $db->exec("ALTER TABLE game_state ADD COLUMN beginner_mode INTEGER DEFAULT 0");
+        } catch(Exception $e) { /* Ignore */ }
+
+        // Set status to PLAYING and set mode
+        $stmt = $db->prepare("UPDATE game_state SET status = 'PLAYING', beginner_mode = :mode, started_at = CURRENT_TIMESTAMP WHERE id = 1");
+        $stmt->execute([':mode' => $beginnerModeVal]);
+        
         echo json_encode(['status' => 'success', 'message' => 'Game Started']);
         break;
 
@@ -101,7 +110,7 @@ switch ($action) {
 
     case 'get_status':
         initDb($db);
-        $stmt = $db->query("SELECT current_number, drawn_numbers, status, winner_info FROM game_state WHERE id = 1");
+        $stmt = $db->query("SELECT current_number, drawn_numbers, status, winner_info, beginner_mode FROM game_state WHERE id = 1");
         $row = $stmt->fetch();
         $row['drawn_numbers'] = json_decode($row['drawn_numbers'], true);
         $row['winner_info'] = json_decode($row['winner_info'], true);

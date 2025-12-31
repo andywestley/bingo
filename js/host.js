@@ -20,7 +20,9 @@ $(document).ready(function () {
 
     // Start Game
     $('#start-game').click(async function () {
-        const result = await apiCall('start_game');
+        let isBeginner = $('#beginner-mode').is(':checked');
+        const result = await $.post('api/game.php', { action: 'start_game', beginner_mode: isBeginner });
+
         if (result.status === 'success') {
             refreshBoard(); // Update UI immediately
         } else {

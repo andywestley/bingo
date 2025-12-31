@@ -178,6 +178,13 @@ $(document).ready(function () {
             $('#card-area').css('opacity', '1');
         }
 
+        // Beginner Mode
+        if (status && status.beginner_mode == 1) {
+            $('body').addClass('beginner-mode-active');
+        } else {
+            $('body').removeClass('beginner-mode-active');
+        }
+
         // Winner Notification
         if (status && status.status !== 'LOBBY' && status.winner_info) {
             let info = status.winner_info;
