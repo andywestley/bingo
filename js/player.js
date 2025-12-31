@@ -61,6 +61,9 @@ function generateCard() {
 
     $('#card-area').html(html);
 
+    // Store for shouting
+    window.finalCardMatrix = finalNumbers;
+
     // Capture numbers for telemetry
     window.myCardNumbers = new Set();
     $('.bingo-number').each(function () {
@@ -132,8 +135,15 @@ $(document).ready(function () {
     // Generate Card
     generateCard();
 
-    $('#bingo-shout').click(function () {
-        alert("BINGO! (Check with host)");
+    $('#bingo-shout').click(async function () {
+        if (confirm("Are you sure you want to shout BINGO?")) {
+            let result = await shoutBingo(playerName, window.finalCardMatrix);
+            if (result.status === 'success') {
+                $(this).text("SHOUTED!").removeClass('btn-warning').addClass('btn-success').prop('disabled', true);
+            } else {
+                alert("Error shouting: " + result.message);
+            }
+        }
     });
 
     // Polling Variables
@@ -178,6 +188,22 @@ $(document).ready(function () {
     // Status Polling Loop
     setInterval(async function () {
         const status = await getStatus();
+
+        // Winner Notification
+        if (status && status.winner_info) {
+            let info = status.winner_info;
+            if (info.player !== playerName) { // Don't annoy the winner themselves
+                // Simple full screen overlay or just an alert? Let's do a sticky header
+                if ($('#winner-banner').length === 0) {
+                    $('body').prepend(`<div id="winner-banner" class="alert alert-success text-center fixed-top" style="z-index:9999; font-size: 1.5rem; font-weight: bold;">
+                        🎉 ${info.player} HAS WON BINGO! 🎉
+                     </div>`);
+                }
+            }
+        } else {
+            $('#winner-banner').remove();
+        }
+
         if (status && status.drawn_numbers) {
             const drawn = status.drawn_numbers;
 

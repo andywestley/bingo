@@ -27,6 +27,7 @@ function initDb($db) {
         current_number INTEGER DEFAULT NULL,
         drawn_numbers TEXT DEFAULT '[]',
         status TEXT DEFAULT 'stopped',
+        winner_info TEXT DEFAULT NULL,
         started_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )");
 
@@ -35,6 +36,11 @@ function initDb($db) {
     if ($count == 0) {
         $db->exec("INSERT INTO game_state (id, current_number, drawn_numbers, status) VALUES (1, NULL, '[]', 'stopped')");
     }
+    
+    // Add winner_info column if missing
+    try {
+        $db->exec("ALTER TABLE game_state ADD COLUMN winner_info TEXT DEFAULT NULL");
+    } catch(Exception $e) { /* Ignore */ }
 
     // Players Table
     $db->exec("CREATE TABLE IF NOT EXISTS players (
@@ -51,7 +57,7 @@ switch ($action) {
     case 'start_game':
         initDb($db);
         // Reset the game state
-        $stmt = $db->prepare("UPDATE game_state SET current_number = NULL, drawn_numbers = '[]', status = 'playing', started_at = CURRENT_TIMESTAMP WHERE id = 1");
+        $stmt = $db->prepare("UPDATE game_state SET current_number = NULL, drawn_numbers = '[]', status = 'playing', winner_info = NULL, started_at = CURRENT_TIMESTAMP WHERE id = 1");
         $stmt->execute();
         echo json_encode(['status' => 'success', 'message' => 'New game started']);
         break;
@@ -85,10 +91,28 @@ switch ($action) {
 
     case 'get_status':
         initDb($db);
-        $stmt = $db->query("SELECT current_number, drawn_numbers, status FROM game_state WHERE id = 1");
+        $stmt = $db->query("SELECT current_number, drawn_numbers, status, winner_info FROM game_state WHERE id = 1");
         $row = $stmt->fetch();
         $row['drawn_numbers'] = json_decode($row['drawn_numbers'], true);
+        $row['winner_info'] = json_decode($row['winner_info'], true);
         echo json_encode($row);
+        break;
+
+    case 'shout_bingo':
+        initDb($db);
+        $player = $_POST['name'] ?? 'Unknown';
+        $card = $_POST['card'] ?? '[]'; // JSON string of matrix
+        
+        $winnerInfo = json_encode([
+            'player' => $player,
+            'card' => json_decode($card),
+            'timestamp' => time()
+        ]);
+        
+        $stmt = $db->prepare("UPDATE game_state SET winner_info = :info WHERE id = 1");
+        $stmt->execute([':info' => $winnerInfo]);
+        
+        echo json_encode(['status' => 'success']);
         break;
 
     case 'register_heartbeat':

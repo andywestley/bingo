@@ -66,6 +66,22 @@ async function getConnectedPlayers() {
     return await apiCall('get_players');
 }
 
+async function shoutBingo(name, cardMatrix) {
+    Logger.info("Shouting Bingo for " + name);
+    try {
+        const formData = new FormData();
+        formData.append('action', 'shout_bingo');
+        formData.append('name', name);
+        formData.append('card', JSON.stringify(cardMatrix));
+
+        const response = await fetch(API_URL, { method: 'POST', body: formData });
+        return await response.json();
+    } catch (e) {
+        Logger.error("Shout Error:", e);
+        return { error: e.message };
+    }
+}
+
 function getNumberSlang(number) {
     // Copied from original bingo.js
     var slang = "";

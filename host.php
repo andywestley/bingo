@@ -114,6 +114,33 @@
       </div>
     </div>
 
+    <!-- Verification Modal -->
+    <div class="modal fade" id="verificationModal" tabindex="-1" role="dialog" aria-labelledby="verifyWinLabel" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title" id="verifyWinLabel">BINGO! - Verify Win</h5>
+            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+            <h2 id="winner-name" class="mb-4">Player Name</h2>
+            <div id="winner-card-container" class="d-flex justify-content-center">
+                <!-- Winning card rendered here -->
+            </div>
+            <div class="mt-3 text-muted">
+                <p>Legend: <span class="badge badge-success">Valid Match</span> <span class="badge badge-danger">False Claim</span></p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close & Continue</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm-win">Details Confirmed</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 	<!-- Optional JavaScript -->
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -148,8 +175,19 @@
             });
 
             // Poll for status initially to populate board if page refreshed
-            async function refreshBoard() {
+             async function refreshBoard() {
                 const status = await getStatus();
+                // Winner Check
+                if (status && status.winner_info) {
+                    let info = status.winner_info;
+                    // Check if we already showed this timestamp to avoid spamming modal
+                    let lastWinTime = window.lastWinTime || 0;
+                    if(info.timestamp > lastWinTime) {
+                        window.lastWinTime = info.timestamp;
+                        showVerificationModal(info);
+                    }
+                }
+
                 if(status && status.drawn_numbers) {
                      // Find previous number (if any)
                      let current = status.current_number;
@@ -190,6 +228,39 @@
                 if(previous) {
                     $('#previous-number').text(previous);
                 }
+            }
+
+            function showVerificationModal(info) {
+                $('#winner-name').text(info.player);
+                
+                // Render Card
+                let html = '<div class="bingo-grid" style="transform: scale(0.8);">'; // Reuse player grid, scaled down
+                let card = info.card; // 9 columns array
+                
+                // Get drawn numbers set
+                let drawnSet = new Set();
+                $('.host-cell.called').each(function() {
+                    drawnSet.add(parseInt($(this).text()));
+                });
+
+                // Iterate Rows (0..2)
+                for (let r = 0; r < 3; r++) {
+                    for (let c = 0; c < 9; c++) {
+                        let num = card[c][r]; // From [col][row]
+                        if (num) {
+                            let isMatch = drawnSet.has(parseInt(num));
+                            let styleClass = isMatch ? 'bg-success text-white' : ''; 
+                            
+                            html += `<div class="bingo-cell bingo-number ${styleClass}" style="width:50px; height:50px; line-height:50px; font-size:1.2rem;">${num}</div>`;
+                        } else {
+                            html += `<div class="bingo-cell empty" style="width:50px; height:50px;"></div>`;
+                        }
+                    }
+                }
+                html += '</div>';
+                
+                $('#winner-card-container').html(html);
+                $('#verificationModal').modal('show');
             }
 
             // Player Polling
