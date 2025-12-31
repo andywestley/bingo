@@ -70,9 +70,11 @@ class BingoUI {
                 });
             }, 10);
 
-            // 5. Update Current Number (Crossfade)
-            currentEl.animate({ opacity: 0 }, 100, function () {
-                $(this).text(nextNum).animate({ opacity: 1 }, 100);
+            // 5. Update Current Number (Fade Out -> Swap -> Fade In)
+            // Use promise-based delay instead of callbacks for clarity/safety
+            currentEl.animate({ opacity: 0 }, 100).promise().done(function () {
+                currentEl.text(nextNum);
+                currentEl.animate({ opacity: 1 }, 100);
             });
 
             // 6. Cleanup

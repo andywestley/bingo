@@ -38,7 +38,7 @@
                     <!-- Previous Numbers History -->
                     <div class="col-6 pl-1">
                         <div class="card bingo-card host-card h-100">
-                            <div class="card-header text-center">History</div>
+                            <div class="card-header text-center">Previous</div>
                             <div class="card-body p-2 d-flex align-items-center justify-content-center">
                                 <div id="host-recent-calls" class="d-flex flex-wrap justify-content-start align-content-start" style="gap: 5px; width: 100%; min-height: 50px;">
                                     <span class="badge badge-light border p-2 m-1">--</span>
