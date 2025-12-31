@@ -122,18 +122,16 @@ switch ($action) {
          $id = $_POST['id'] ?? '';
          $name = $_POST['name'] ?? 'Unknown';
          $score = $_POST['score'] ?? 0;
+         // Receive strings from JS (comma separated)
+         $matched = $_POST['matched'] ?? '';
+         $marked = $_POST['marked'] ?? '';
+         
          if(!$id) {
              echo json_encode(['error' => 'Missing ID']);
              exit;
          }
          
          // Ensure schema has score column (poor man's migration for SQLite)
-         // We'll just ignore error if it exists or create table with it from scratch if not.
-         // Better: just add it to the CREATE statement and alter if needed? 
-         // For simplicity in this dev loop, let's assume table might need alter or just recreate.
-         // Actually, let's just try to add the column if missing? No, SQLite ALTER is limited.
-         // Simplest for this env: Just update the CREATE IF NOT EXISTS in initDb and hope user creates fresh on deploy, 
-         // OR, just try to run ALTER TABLE and catch exception.
          try {
             $db->exec("ALTER TABLE players ADD COLUMN score INTEGER DEFAULT 0");
          } catch(Exception $e) { /* Ignore if exists */ }
