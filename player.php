@@ -10,6 +10,7 @@
 
 <title>Bingo Player</title>
 <link rel="stylesheet" href="WebContent/bingo.css"> 
+<link rel="stylesheet" href="css/bingo-theme.css?v=<?php echo time(); ?>">
 <link rel="stylesheet" href="css/bingo-grid.css?v=<?php echo time(); ?>">
 <link rel="stylesheet" href="css/player.css?v=<?php echo time(); ?>">
 </head>
@@ -35,7 +36,7 @@
         </div>
         
         <div class="col-6 pr-1">
-            <div class="card shadow-sm h-100">
+            <div class="card bingo-card shadow-sm h-100">
                 <div class="card-header py-1 text-center font-weight-bold bg-primary text-white">Current</div>
                 <div class="card-body d-flex justify-content-center align-items-center p-2">
                     <div id="last-called" class="display-3 font-weight-bold text-dark">--</div>
@@ -44,7 +45,7 @@
         </div>
         
         <div class="col-6 pl-1">
-             <div class="card shadow-sm h-100">
+             <div class="card bingo-card shadow-sm h-100">
                 <div class="card-header py-1 text-center font-weight-bold bg-secondary text-white">Previous</div>
                 <div class="card-body p-2 d-flex align-items-center justify-content-center">
                     <div id="recent-calls" class="d-flex flex-wrap justify-content-center" style="gap: 5px;">

@@ -1,13 +1,8 @@
 /* Premium Player UI */
-:root {
-    --primary-color: #ffc107;
-    --success-color: #28a745;
-    --bg-color: #f8f9fa;
-    --card-bg: #ffffff;
-}
+/* :root variables are now in bingo-theme.css */
 
 body {
-    background-color: var(--bg-color);
+    /* Background and Font are handled by theme.css */
 }
 
 .player-card {

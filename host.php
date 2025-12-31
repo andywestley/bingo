@@ -11,6 +11,7 @@
 <title>Bingo Host</title>
 
 <link rel="stylesheet" href="WebContent/bingo.css"> 
+<link rel="stylesheet" href="css/bingo-theme.css?v=<?php echo time(); ?>">
 <link rel="stylesheet" href="css/bingo-grid.css?v=<?php echo time(); ?>">
 <link rel="stylesheet" href="css/host.css?v=<?php echo time(); ?>">
 
@@ -22,7 +23,7 @@
 
 		<div class="row host-section" id="top">
 			<div class="col-md-3 mb-3 order-2 order-md-2">
-				<div class="card host-card">
+				<div class="card bingo-card host-card">
 					<div class="card-header text-center">Current</div>
 					<div class="card-body text-center d-flex flex-column justify-content-center align-items-center p-2">
 						<div class="current-ball" id="current-number" style="font-size: 5rem;">--</div>
@@ -33,7 +34,7 @@
 
             <!-- Previous Ball (Mobile: 3, Desktop: 3) -->
 			<div class="col-md-2 mb-3 order-3 order-md-3">
-				<div class="card host-card">
+				<div class="card bingo-card host-card">
 					<div class="card-header text-center">Prev</div>
 					<div class="card-body text-center d-flex align-items-center justify-content-center p-2">
 						<div style="font-size: 3rem; color: #ced4da; font-weight:700;" id="previous-number">--</div>

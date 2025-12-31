@@ -1,46 +1,19 @@
 /* Premium Host UI */
-:root {
-    --primary-color: #ffc107;
-    --success-color: #28a745;
-    --bg-color: #f8f9fa;
-    --card-bg: #ffffff;
-    --text-color: #343a40;
-}
+/* :root variables are now in bingo-theme.css */
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    /* Background and Font are handled by theme.css */
+    /* Only adding specific host overrides if any */
 }
 
 .host-section {
     margin-bottom: 20px;
 }
 
-/* Card Styling (Shared feel with Player) */
+/* Host Card - Extends theme .bingo-card via HTML class */
 .host-card {
-    background: var(--card-bg);
-    border: none;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    /* Softer shadow */
-    transition: transform 0.2s;
+    /* Not using CSS modules, calling class in HTML is better */
     height: 100%;
-    overflow: hidden;
-}
-
-.host-card .card-header {
-    background: transparent;
-    border-bottom: 2px solid #f1f3f5;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #adb5bd;
-    font-size: 0.9rem;
-    padding: 15px 20px;
-}
-
-.host-card .card-body {
-    padding: 20px;
 }
 
 /* Main Number Display */
