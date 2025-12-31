@@ -27,6 +27,10 @@ $(document).ready(function () {
             const result = await drawBall();
             if (result.status === 'success') {
                 await updateBoardAnim(result.current_number);
+                // Update count
+                if (result.drawn_numbers) {
+                    $('#called-count-badge').text(`${result.drawn_numbers.length} / 90`);
+                }
             } else if (result.status === 'error') {
                 alert(result.message);
             }
@@ -98,6 +102,9 @@ $(document).ready(function () {
 
             // Initial update (no animation)
             updateDisplayInitial(current, status.drawn_numbers);
+
+            // Update count
+            $('#called-count-badge').text(`${status.drawn_numbers.length} / 90`);
 
             // Highlight all
             status.drawn_numbers.forEach(num => {

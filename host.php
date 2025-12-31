@@ -94,8 +94,10 @@
 			<div class="col-12">
 
 				<div class="card host-card">
-					<div class="card-header" id="remaining-numbers-label">Master Board</div>
-					<div class="card-body">
+					<div class="card-header d-flex justify-content-between align-items-center">
+                        Master Board
+                        <span id="called-count-badge" class="badge badge-pill badge-secondary" style="font-size: 0.9em;">0 / 90</span>
+                    </div>					<div class="card-body">
 						<div class="host-grid">
                             <?php for($i=1; $i<=90; $i++): ?>
 							    <div class="host-cell" id="ball-<?php echo $i; ?>"><?php echo $i; ?></div>
